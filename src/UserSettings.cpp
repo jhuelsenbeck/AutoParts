@@ -82,8 +82,8 @@ UserSettings::UserSettings(int argc,  char* argv[]) {
     burnIn                          = 0;
     tuningFrequency                 = 1000;
     numGammaCategories              = 1;
-    treeLengthMean                  = 6.0;
-    treeLengthSD                    = 0.5;
+    treeLengthMean                  = 1.0;
+    treeLengthSD                    = 1.0;
     shapeLambda                     = 1.0;
     printFrequency                  = 1000;
     sampleFrequency                 = 100;
