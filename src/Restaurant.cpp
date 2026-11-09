@@ -417,49 +417,74 @@ double Restaurant::update(double power) {
     ThreadPool& pool = ThreadPool::threadPool();
     modelPtr->prepareWorkspaces(pool.getNumThreads());
         
-    // 1. update the parameters on each table
-    for (Table* tab : tables)
+    // 1. update the parameters on each table. The tables have no patrons in common, so
+    // the proposals for all of the tables are made first (in table order, as they draw
+    // random numbers), the likelihoods of all of the patrons are then calculated in one
+    // parallel loop, and finally each proposal is accepted or rejected, in table order.
+    // Done this way, tables with few patrons do not leave most of the threads idle.
+    UpdateInfo& updateInfo = UpdateInfo::updateInfo();
+    std::vector<Table*> tableList(tables.begin(), tables.end());
+    int numTables = (int)tableList.size();
+    std::vector<double> tableLnPriorRatio(numTables), tableLnProposalRatio(numTables);
+    std::vector<UpdateType> tableUpdateType(numTables);
+    std::vector<int> patronTable(numPatrons, -1);
+    std::vector<int> patronList;
+    patronList.reserve(numPatrons);
+    for (int k=0; k<numTables; k++)
         {
         // change the parameter
-        Parameter* parm = tab->getParameter();
+        Parameter* parm = tableList[k]->getParameter();
+        updateInfo.setAttemptedUpdate(UpdateType::NO_MOVE);
         double lnPriorRatio = -parm->lnProbability();
-        double lnProposalRatio = parm->update();
+        tableLnProposalRatio[k] = parm->update();
         lnPriorRatio += parm->lnProbability();
-        
-        // calculate likelihood (each patron has its own buffers, so the patrons are done in parallel)
+        tableLnPriorRatio[k] = lnPriorRatio;
+        tableUpdateType[k] = updateInfo.getAttemptedUpdate();
+        for (int i : tableList[k]->getPatrons())
+            {
+            patronTable[i] = k;
+            patronList.push_back(i);
+            }
+        }
+
+    // calculate the likelihoods (each patron has its own buffers, so the patrons are done in parallel)
+    pool.parallelFor((int)patronList.size(), [&](int j, int) {
+        int i = patronList[j];
+        Chunk* chunk = modelPtr->getChunk(i);
+        if (tableList[patronTable[i]]->getParameter()->getUpdateModifiesEigens() == true)
+            {
+            chunk->flipActiveEigens();
+            chunk->updateRateMatrix();
+            }
+        chunk->flipActiveTransitionProbabilities();
+        chunk->updateTransitionProbabilities();
+        newLnL[i] = chunk->lnLikelihood();
+        });
+
+    for (int k=0; k<numTables; k++)
+        {
+        Table* tab = tableList[k];
+        Parameter* parm = tab->getParameter();
         std::set<int>& tablePatrons = tab->getPatrons();
-        std::vector<int> patronList(tablePatrons.begin(), tablePatrons.end());
-        bool modifiesEigens = parm->getUpdateModifiesEigens();
-        pool.parallelFor((int)patronList.size(), [&](int j, int) {
-            int i = patronList[j];
-            Chunk* chunk = modelPtr->getChunk(i);
-            if (modifiesEigens == true)
-                {
-                chunk->flipActiveEigens();
-                chunk->updateRateMatrix();
-                }
-            chunk->flipActiveTransitionProbabilities();
-            chunk->updateTransitionProbabilities();
-            newLnL[i] = chunk->lnLikelihood();
-            });
         double lnLikelihoodRatio = 0.0;
-        for (int i : patronList)
+        for (int i : tablePatrons)
             lnLikelihoodRatio += (newLnL[i] - curLnL[i]);
             
         // accept/reject
-        double lnR = (lnLikelihoodRatio * power) + lnPriorRatio + lnProposalRatio; // only the likelihood is heated
+        double lnR = (lnLikelihoodRatio * power) + tableLnPriorRatio[k] + tableLnProposalRatio[k]; // only the likelihood is heated
         bool accept = false;
         if (log(rng.uniformRv()) < lnR)
             accept = true;
             
         // update
+        updateInfo.setAttemptedUpdate(tableUpdateType[k]);
         if (accept == true)
             {
             // proposed update is accepted
             parm->accept();
             for (int i : tablePatrons)
                 curLnL[i] = newLnL[i];
-            UpdateInfo::updateInfo().accept();
+            updateInfo.accept();
             }
         else
             {
@@ -472,7 +497,7 @@ double Restaurant::update(double power) {
                     chunk->flipActiveEigens();
                 chunk->flipActiveTransitionProbabilities();
                 }
-            UpdateInfo::updateInfo().reject();
+            updateInfo.reject();
             }
         }
 
@@ -480,7 +505,7 @@ double Restaurant::update(double power) {
     if (isSeatingRv == true)
         {
         TableSet auxiliaryTables;
-        int numAuxliaryTables = 10;
+        int numAuxiliaryTables = settingsPtr->getNumAuxiliaryTables();   // m in Neal (2000)
         for (int n=0; n<numPatrons; n++)
             {
             // get the chunk for the patron, and its current parameter values (which must be
@@ -497,7 +522,7 @@ double Restaurant::update(double power) {
             // if the patron was alone at its table, Algorithm 8 keeps that table (and its
             // parameter value) as the first auxiliary table, so only m-1 fresh tables are
             // drawn; if it is not chosen, it is removed below along with the other empty tables
-            int numFreshTables = numAuxliaryTables;
+            int numFreshTables = numAuxiliaryTables;
             if (tab->getNumPatrons() == 0)
                 {
                 auxiliaryTables.insert(tab);
@@ -532,7 +557,7 @@ double Restaurant::update(double power) {
                 if (it == auxiliaryTables.end())
                     lnP = log( (double)t->getNumPatrons() );  // the patron is not seated, so this is n_{-i,c}
                 else
-                    lnP = log(alpha/numAuxliaryTables);
+                    lnP = log(alpha/numAuxiliaryTables);
                 tableLikes.insert( std::make_pair(t, lnL+lnP) );
                 tableLnL.insert( std::make_pair(t, rawLnL) );
                 }

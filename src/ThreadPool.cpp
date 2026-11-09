@@ -11,6 +11,11 @@
 
 namespace {
 
+    // true on a thread while it is running an item of a parallel loop; a loop started
+    // from inside another loop is run serially by that thread
+    thread_local bool insideLoop = false;
+    thread_local int  threadIdx = 0;     // the worker index of this thread (0 for the caller)
+
     inline void cpuRelax(void) {
 
 #       if defined(__aarch64__) || defined(__arm64__)
@@ -54,10 +59,10 @@ void ThreadPool::parallelFor(int n, const std::function<void(int,int)>& f) {
 
     if (n <= 0)
         return;
-    if (numThreads == 1 || n == 1)
+    if (numThreads == 1 || n == 1 || insideLoop == true)
         {
         for (int i=0; i<n; i++)
-            f(i, 0);
+            f(i, threadIdx);
         return;
         }
 
@@ -78,8 +83,10 @@ void ThreadPool::parallelFor(int n, const std::function<void(int,int)>& f) {
 
     // take part as worker 0
     int i;
+    insideLoop = true;
     while ((i = job.next.fetch_add(1, std::memory_order_relaxed)) < n)
         f(i, 0);
+    insideLoop = false;
 
     // wait for every worker to be done with this loop (each one checks in, even if it
     // found no work), so that the job, which lives on this stack, can be released
@@ -115,6 +122,9 @@ void ThreadPool::stopWorkers(void) {
 }
 
 void ThreadPool::workerLoop(int workerIdx) {
+
+    insideLoop = true;
+    threadIdx = workerIdx;
 
     unsigned long long seen = generation.load(std::memory_order_acquire);
     while (true)

@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cmath>
 #include <iomanip>
 #include <iostream>
@@ -10,6 +11,7 @@
 #include "Probability.hpp"
 #include "RandomVariable.hpp"
 #include "StateSets.hpp"
+#include "ThreadPool.hpp"
 #include "Tree.hpp"
 
 
@@ -298,54 +300,64 @@ void Tree::calculateReconnectionProbabilities(CutInfo& info, std::map<NodePair,d
 	double marginalLikelihoodTerm = alnPtr->getNumSites() * ((2 * getNumTaxa() - 3) * a0 - log(4.0) );
 	double tempFactor = a1 - a0;
 
-    // calculate the unscaled probabilities of all reconnection possibilities
+    // list all of the reconnection possibilities
     int nNodes1 = (int)info.subtree1.size();
     int nNodes2 = (int)info.subtree2.size();
-    double maxP = 0.0;
-    for (int i=0; i<info.subtree1.size(); i++)
+    std::vector<std::pair<Node*,Node*>> pairs;
+    for (int i=0; i<nNodes1; i++)
         {
         Node* p1 = info.subtree1[i];
         Node* pAnc1 = p1->getAncestor();
         if ( (pAnc1 == NULL && nNodes1 == 1) || pAnc1 != NULL )
             {
-            for (int j=0; j<info.subtree2.size(); j++)
+            for (int j=0; j<nNodes2; j++)
                 {
                 Node* p2 = info.subtree2[j];
                 Node* pAnc2 = p2->getAncestor();
                 if ( (pAnc2 == NULL && nNodes2 == 1) || pAnc2 != NULL )
-                    {
-                    NodePair nodePair(p1, p2);
-                    
-                    // parsimony thing here
-                    unsigned *ss1 = ssPtr->getStsPtr( 1, p1->getIndex() );
-                    unsigned *ss2 = ssPtr->getStsPtr( 1, p2->getIndex() );
-                    int length = length1 + length2;
-                    for (int c=0; c<alnPtr->getNumSites(); c++)
-                        {
-                        unsigned x = (*ss1);
-                        unsigned y = (*ss2);
-                        unsigned zA = (x & y);
-                        if ( zA == 0 )
-                            length += alnPtr->getNumSitesOfPattern( c );
-                        ss1++;
-                        ss2++;
-                        }
-					double lnP = tempFactor * length + marginalLikelihoodTerm;
-                    lnP *= heat;
-                    
-                    if (vals.size() == 0)
-                        {
-                        maxP = lnP;
-                        }
-                    else
-                        {
-                        if (lnP > maxP)
-                            maxP = lnP;
-                        }
-                    vals.insert( std::make_pair(nodePair,lnP) );
-                    }
+                    pairs.push_back( std::make_pair(p1, p2) );
                 }
             }
+        }
+
+    // the parsimony length of each reconnection, calculated in parallel (in blocks of
+    // pairs, as each pair is a short loop over the site patterns); the lengths are
+    // integers, so the result does not depend on the number of threads
+    int numPairs = (int)pairs.size();
+    std::vector<int> lengths(numPairs);
+    int numChar = ssPtr->getNumChar();
+    const int* w = ssPtr->getPatternWeights();
+    int blockSize = 8;
+    int numBlocks = (numPairs + blockSize - 1) / blockSize;
+    ThreadPool::threadPool().parallelFor(numBlocks, [&](int b, int) {
+        int last = std::min(numPairs, (b + 1) * blockSize);
+        for (int k=b*blockSize; k<last; k++)
+            {
+            const unsigned* ss1 = ssPtr->getStsPtr( 1, pairs[k].first->getIndex() );
+            const unsigned* ss2 = ssPtr->getStsPtr( 1, pairs[k].second->getIndex() );
+            int length = length1 + length2;
+            for (int c=0; c<numChar; c++)
+                length += ((ss1[c] & ss2[c]) == 0) ? w[c] : 0;
+            lengths[k] = length;
+            }
+        });
+
+    // the unscaled log probabilities of the reconnections
+    double maxP = 0.0;
+    for (int k=0; k<numPairs; k++)
+        {
+        double lnP = tempFactor * lengths[k] + marginalLikelihoodTerm;
+        lnP *= heat;
+        if (vals.size() == 0)
+            {
+            maxP = lnP;
+            }
+        else
+            {
+            if (lnP > maxP)
+                maxP = lnP;
+            }
+        vals.insert( std::make_pair(NodePair(pairs[k].first, pairs[k].second), lnP) );
         }
         
     // rescale the probabilities

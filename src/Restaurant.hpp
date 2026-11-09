@@ -44,7 +44,7 @@ class Restaurant {
         UserSettings*       settingsPtr;
         double              alpha;
         int                 numPatrons;
-        TableSet    tables;
+        TableSet            tables;
         Parameter*          parameter;
         bool                isSeatingRv;
         double              gammaAlpha;

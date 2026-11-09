@@ -55,6 +55,8 @@ class UpdateInfo {
                                                 else return 1.0;
                                                 }
         void                                reject(void);
+        UpdateType                          getAttemptedUpdate(void) { return attemptedUpdate; }
+        void                                setAttemptedUpdate(UpdateType m) { attemptedUpdate = m; }
         void                                resetStats();
         void                                setTunableParam(UpdateType m, double v)
                                                 {

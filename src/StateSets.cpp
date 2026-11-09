@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cmath>
 #include <iostream>
 #include <iomanip>
@@ -5,6 +6,7 @@
 #include "Msg.hpp"
 #include "Node.hpp"
 #include "StateSets.hpp"
+#include "ThreadPool.hpp"
 #include "UserSettings.hpp"
 
 #define UPPER  0
@@ -22,6 +24,12 @@ StateSets::StateSets(Alignment* ap, UserSettings* sp) {
 	numChar         = alignmentPtr->getNumSites();
 	numNodes        = 2 * numTaxa - 2;
 	oneStateSetSize = numNodes * numChar;
+
+	// the number of sites with each site pattern, held here so the parsimony loops below
+	// do not need a function call per site
+	patternWeights.resize(numChar);
+	for (int c=0; c<numChar; c++)
+		patternWeights[c] = alignmentPtr->getNumSitesOfPattern(c);
 	
 	// allocate the state sets vector
 	sts = new unsigned[3 * oneStateSetSize];
@@ -153,8 +161,21 @@ int StateSets::initializeStateSets(std::vector<Node*>& dp) {
 		return 0;
 		}
 
+	// Make a list of the state-set operations for the down pass, the up pass, and the
+	// state sets at the middle of each branch, in the order in which they must be done.
+	// Each site is independent, so the list is then applied to blocks of sites in
+	// parallel. The lengths are integers, so the total does not depend on the threads.
+	struct Op {
+		int             kind;       // 0 = copy a; 1 = Fitch of a and b; 2 = copy a, counting a change if a and b do not overlap
+		unsigned*       out;
+		const unsigned* a;
+		const unsigned* b;
+		bool            count;      // for kind 1, whether a change adds to the length
+	};
+	std::vector<Op> ops;
+	ops.reserve(3 * dp.size());
+
 	// pass down
-	int parsimonyLength = 0;
 	for (int n=0; n<dp.size(); n++)
 		{
 		Node* p = dp[n];
@@ -162,105 +183,43 @@ int StateSets::initializeStateSets(std::vector<Node*>& dp) {
 			{
 			/* tip */
 			int idx = p->getIndex();
-			unsigned *ss = stsPtr[UPPER][idx];
-			for (int c=0; c<numChar; c++)
-				{
-				(*ss) = codedMatrix[idx][c];
-				ss++;
-				}
+			ops.push_back( {0, stsPtr[UPPER][idx], codedMatrix[idx], nullptr, false} );
 			}
 		else if ( p->getIsLeaf() == true && p->getAncestor() == NULL )
 			{
-			/* tip */
-            std::vector<Node*> pDesc = p->getDescendants();
-            if (pDesc.size() != 1)
-                Msg::error("Expecting one descendant of tip node at root");
+			/* tip at the root */
+			std::vector<Node*> pDesc = p->getDescendants();
+			if (pDesc.size() != 1)
+				Msg::error("Expecting one descendant of tip node at root");
 			int idx = p->getIndex();
 			int desIdx = pDesc[0]->getIndex();
-			unsigned *ss  = stsPtr[LOWER][desIdx];
-			unsigned *ssU = stsPtr[UPPER][desIdx];
-			for (int c=0; c<numChar; c++)
-				{
-				(*ss) = codedMatrix[idx][c];
-				unsigned x = (*ss);
-				unsigned y = (*ssU);
-				unsigned zA = (x & y);
-				if ( zA == 0 )
-					parsimonyLength += alignmentPtr->getNumSitesOfPattern(c);
-				ss++;
-				ssU++;
-				}
+			ops.push_back( {2, stsPtr[LOWER][desIdx], codedMatrix[idx], stsPtr[UPPER][desIdx], true} );
 			}
 		else
 			{
 			/* interior node */
-            std::vector<Node*> pDesc = p->getDescendants();
-            if (pDesc.size() != 2)
-                Msg::error("Expecting two descendants of an interior node");
-			unsigned* ss  = stsPtr[UPPER][p->getIndex()];
-			unsigned* ssL = stsPtr[UPPER][pDesc[0]->getIndex()];
-			unsigned* ssR = stsPtr[UPPER][pDesc[1]->getIndex()];
-			for (int c=0; c<numChar; c++)
-				{
-				unsigned x = (*ssL);
-				unsigned y = (*ssR);
-				unsigned zA = (x & y);
-				if ( zA == 0 )
-					{
-					unsigned zO = (x | y);
-					(*ss) = zO;
-					parsimonyLength += alignmentPtr->getNumSitesOfPattern(c);
-					//cout << "parsimonyLength = " << parsimonyLength << endl;
-					}
-				else
-					(*ss) = zA;
-				ss++;
-				ssL++;
-				ssR++;
-				}
+			std::vector<Node*> pDesc = p->getDescendants();
+			if (pDesc.size() != 2)
+				Msg::error("Expecting two descendants of an interior node");
+			ops.push_back( {1, stsPtr[UPPER][p->getIndex()], stsPtr[UPPER][pDesc[0]->getIndex()], stsPtr[UPPER][pDesc[1]->getIndex()], true} );
 			}
 		}
-		
+
 	// pass up
 	for (int n=(int)dp.size()-1; n>=0; n--)
 		{
 		Node* p = dp[n];
-        Node* pAnc = p->getAncestor();
-		if (pAnc != NULL)
+		Node* pAnc = p->getAncestor();
+		if (pAnc != NULL && pAnc->getAncestor() != NULL)
 			{
-			if ( pAnc->getAncestor() != NULL )
-				{
-                std::vector<Node*> pAncDesc = pAnc->getDescendants();
-                if (pAncDesc.size() != 2)
-                    Msg::error("Expecting two descendants of an interior node");
-				Node* pU;
-				if (pAncDesc[0] == p)
-					pU = pAncDesc[1];
-				else
-					pU = pAncDesc[0];
-				unsigned* ss  = stsPtr[LOWER][p->getIndex()];
-				unsigned* ssL = stsPtr[LOWER][pAnc->getIndex()];
-				unsigned* ssU = stsPtr[UPPER][pU->getIndex()];
-				for (int c=0; c<numChar; c++)
-					{
-					unsigned x = (*ssU);
-					unsigned y = (*ssL);
-					unsigned zA = (x & y);
-					if ( zA == 0 )
-						{
-						unsigned zO = (x | y);
-						(*ss) = zO;
-						}
-					else
-						(*ss) = zA;
-					ss++;
-					ssU++;
-					ssL++;
-					}
-				}
+			std::vector<Node*> pAncDesc = pAnc->getDescendants();
+			if (pAncDesc.size() != 2)
+				Msg::error("Expecting two descendants of an interior node");
+			Node* pU = (pAncDesc[0] == p) ? pAncDesc[1] : pAncDesc[0];
+			ops.push_back( {1, stsPtr[LOWER][p->getIndex()], stsPtr[UPPER][pU->getIndex()], stsPtr[LOWER][pAnc->getIndex()], false} );
 			}
 		}
-		
+
 	// get state sets for center
 	for (int n=0; n<dp.size(); n++)
 		{
@@ -268,28 +227,61 @@ int StateSets::initializeStateSets(std::vector<Node*>& dp) {
 		if ( p->getAncestor() != NULL )
 			{
 			int idx = p->getIndex();
-			unsigned* ssU = stsPtr[UPPER][idx];
-			unsigned* ssL = stsPtr[LOWER][idx];
-			unsigned* ssM = stsPtr[MIDDLE][idx];
-			for (int c=0; c<numChar; c++)
-				{
-				unsigned x = (*ssU);
-				unsigned y = (*ssL);
-				unsigned zA = (x & y);
-				if ( zA == 0 )
-					{
-					unsigned zO = (x | y);
-					(*ssM) = zO;
-					}
-				else
-					(*ssM) = zA;
-				ssU++;
-				ssL++;
-				ssM++;
-				}
+			ops.push_back( {1, stsPtr[MIDDLE][idx], stsPtr[UPPER][idx], stsPtr[LOWER][idx], false} );
 			}
 		}
-		
+
+	// apply the operations to blocks of sites, in parallel
+	const int blockSize = 256;
+	int numBlocks = (numChar + blockSize - 1) / blockSize;
+	std::vector<int> blockLengths(numBlocks, 0);
+	const int* w = patternWeights.data();
+	ThreadPool::threadPool().parallelFor(numBlocks, [&](int blk, int) {
+		int first = blk * blockSize;
+		int last = std::min(numChar, first + blockSize);
+		int length = 0;
+		for (const Op& op : ops)
+			{
+			unsigned* __restrict out = op.out;
+			const unsigned* __restrict a = op.a;
+			const unsigned* __restrict b = op.b;
+			if (op.kind == 0)
+				{
+				for (int c=first; c<last; c++)
+					out[c] = a[c];
+				}
+			else if (op.kind == 2)
+				{
+				for (int c=first; c<last; c++)
+					{
+					out[c] = a[c];
+					length += ((a[c] & b[c]) == 0) ? w[c] : 0;
+					}
+				}
+			else if (op.count == true)
+				{
+				for (int c=first; c<last; c++)
+					{
+					unsigned zA = a[c] & b[c];
+					out[c] = (zA == 0) ? (a[c] | b[c]) : zA;
+					length += (zA == 0) ? w[c] : 0;
+					}
+				}
+			else
+				{
+				for (int c=first; c<last; c++)
+					{
+					unsigned zA = a[c] & b[c];
+					out[c] = (zA == 0) ? (a[c] | b[c]) : zA;
+					}
+				}
+			}
+		blockLengths[blk] = length;
+		});
+
+	int parsimonyLength = 0;
+	for (int len : blockLengths)
+		parsimonyLength += len;
 	return parsimonyLength;
 }
 

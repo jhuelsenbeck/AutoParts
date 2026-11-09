@@ -45,6 +45,7 @@ UserSettings::UserSettings(int argc,  char* argv[]) {
     numChains                       = 1;
     seed                            = (uint32_t)time(NULL);
     numThreads                      = ThreadPool::defaultNumThreads();
+    numAuxiliaryTables              = 10;
     temperature                     = 0.2;
     numMcmcCycles                   = 400000;
     burnIn                          = 0;
@@ -93,6 +94,8 @@ UserSettings::UserSettings(int argc,  char* argv[]) {
                 numSims = stoi(settings[i]);
             else if (currentArg == "-tu")
                 tuningFrequency = stoi(settings[i]);
+            else if (currentArg == "-aux")
+                numAuxiliaryTables = stoi(settings[i]);
             else if (currentArg == "-threads")
                 numThreads = stoi(settings[i]);
             else if (currentArg == "-seed")
@@ -156,6 +159,8 @@ UserSettings::UserSettings(int argc,  char* argv[]) {
             currentArg = "";
             }
         }
+    if (numAuxiliaryTables < 1)
+        Msg::error("The number of auxiliary tables (-aux) must be at least 1");
 }
 
 double UserSettings::getAlphaT(void) {
@@ -195,6 +200,7 @@ void UserSettings::print(void) {
     std::cout << "   * Number of MCMC chains                                 = " << numChains << std::endl;
     std::cout << "   * Random number seed                                    = " << seed << std::endl;
     std::cout << "   * Number of threads                                     = " << numThreads << std::endl;
+    std::cout << "   * Number of auxiliary tables (Neal's m)                 = " << numAuxiliaryTables << std::endl;
     std::cout << "   * MC^3 temperature                                      = " << temperature << std::endl;
     std::cout << "   * Number of MCMC cycles                                 = " << numMcmcCycles << std::endl;
     std::cout << "   * Sample Frequency                                      = " << sampleFrequency << std::endl;
@@ -233,6 +239,7 @@ void UserSettings::usage(void) {
     
     std::cout << "   Program options for DPP:" << std::endl;
     std::cout << "   * -c               : Concentration parameter is fixed (yes) or a random variable (no)" << std::endl;
+    std::cout << "   * -aux             : Number of auxiliary tables when reseating (m in Neal's Algorithm 8; default 10)" << std::endl;
     std::cout << "   * -k               : Prior mean of the number of categories when the concentration parameter is fixed" << std::endl;
     std::cout << "   * -m               : Prior mean of the concentration parameter when it is a random variable" << std::endl;
     std::cout << "   * -mT              : Expected number of tables when the concentration parameter is a random variable" << std::endl;
