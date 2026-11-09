@@ -3,18 +3,19 @@
 # Run the analyses of the paper (listed in Analyses/paper_runs.txt).
 #
 #   Analyses/run_all.sh                 build the program, then run every analysis, several at
-#                                       a time (default: one per 7 physical cores, e.g. 4 on 28)
+#                                       a time (default: one per 4 physical cores, e.g. 7 on 28)
 #   Analyses/run_all.sh --jobs 2        run 2 analyses at a time (the cores are shared among them)
 #   Analyses/run_all.sh empirical       only the runs whose name contains "empirical"
 #   Analyses/run_all.sh cynmix_hyper    (any text in the run name selects runs)
 #   Analyses/run_all.sh --dry-run       show what would be run, and what is done
-#   Analyses/run_all.sh --threads 7     use 7 threads per analysis (default: the number of
+#   Analyses/run_all.sh --threads 4     use 4 threads per analysis (default: the number of
 #                                       physical cores divided by the number of jobs)
 #   Analyses/run_all.sh --runs FILE     use another list of runs
 #
-# One analysis uses at most about a dozen threads well, so on a machine with many cores
-# it is faster overall to run several analyses at once. The runs start in the order of
-# the list, which puts the longest (hummingbird) runs first.
+# One analysis does not use many threads efficiently, so it is faster overall to run
+# several analyses at once, each with a few threads (on an M5 Max, three analyses with 4
+# threads each got through work about 1.5 times as fast as one with 12). The runs start
+# in the order of the list, which puts the longest (simulation) runs first.
 #
 # The script can be stopped (Ctrl-C) and started again: a run that finished has a
 # <name>.done file in Analyses/Output and is skipped. A run that was interrupted, or
@@ -76,7 +77,7 @@ while [ $# -gt 0 ]; do
 done
 numCores=$(sysctl -n hw.physicalcpu 2>/dev/null || echo 1)
 if [ -z "$jobs" ]; then
-    jobs=$((numCores / 7))
+    jobs=$((numCores / 4))
     [ "$jobs" -lt 1 ] && jobs=1
 fi
 case "$jobs" in *[!0-9]*|0) echo "--jobs needs a positive whole number" >&2; exit 1 ;; esac
