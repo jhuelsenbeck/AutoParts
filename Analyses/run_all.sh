@@ -131,7 +131,7 @@ fi
 caffeinate -i -w $$ &
 
 echo "$numToRun runs to do ($numDone of the $numSelected selected are done), $jobs at a time, $threads threads each"
-xargs -P "$jobs" -L 1 "$0" --run-one "$threads" < "$toRun"
+xargs -P "$jobs" -L 1 "$ANALYSES_DIR/$(basename "$0")" --run-one "$threads" < "$toRun"
 
 numFailed=0
 while IFS= read -r line; do
