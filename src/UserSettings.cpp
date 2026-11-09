@@ -1,12 +1,11 @@
 #include <cmath>
+#include <ctime>
 #include <iomanip>
 #include <iostream>
 #include <string>
 #include <vector>
 #include "Msg.hpp"
 #include "UserSettings.hpp"
-
-#undef DEBUG_MODE
 
 
 
@@ -16,45 +15,11 @@ UserSettings::UserSettings(int argc,  char* argv[]) {
 
     // set up a vector of arguments
     std::vector<std::string> settings;
-#   if defined(DEBUG_MODE)
-    //settings.push_back("-i");
-    //settings.push_back("/workspaces/AnnaAutoparts/analyses/Empirical/1_cynmix/fixed/E(K)1.2_1/cynmix.in");
-    settings.push_back("-o");
-    settings.push_back("/workspaces/AnnaAutoparts/sim.out");
-    settings.push_back("-n");
-    settings.push_back("50000");
-    settings.push_back("-p");
-    settings.push_back("100");
-    settings.push_back("-s");
-    settings.push_back("500");
-    settings.push_back("-b");
-    settings.push_back("10000");
-    settings.push_back("-g");
-    settings.push_back("4");
-    settings.push_back("-eLength");
-    settings.push_back("1.2");
-    settings.push_back("-eShape");
-    settings.push_back("1.2");
-    settings.push_back("-ePi");
-    settings.push_back("1.2");
-    settings.push_back("-eTheta");
-    settings.push_back("1.2");
-    settings.push_back("-lenMean");
-    settings.push_back("6.0");
-    settings.push_back("-lenSD");
-    settings.push_back("0.25");
-    settings.push_back("-si");
-    settings.push_back("/workspaces/AnnaAutoparts/sim.in");
-    tuningFrequency = 1000;
-    numSims = 1;
-    argc = (int)settings.size() + 1;
-#   else
     for (int i=1; i<argc; i++)
         {
         std::string arg = argv[i];
         settings.push_back(arg);
         }
-#   endif
 
     // check the number of arguments
     if (argc == 1)
@@ -77,6 +42,7 @@ UserSettings::UserSettings(int argc,  char* argv[]) {
     simFile                         = "";
     numSims                         = 50;
     numChains                       = 1;
+    seed                            = (uint32_t)time(NULL);
     temperature                     = 0.2;
     numMcmcCycles                   = 400000;
     burnIn                          = 0;
@@ -125,6 +91,8 @@ UserSettings::UserSettings(int argc,  char* argv[]) {
                 numSims = stoi(settings[i]);
             else if (currentArg == "-tu")
                 tuningFrequency = stoi(settings[i]);
+            else if (currentArg == "-seed")
+                seed = (uint32_t)stoul(settings[i]);
             else if (currentArg == "-nc")
                 numChains = stoi(settings[i]);
             else if (currentArg == "-temp")
@@ -221,6 +189,7 @@ void UserSettings::print(void) {
     std::cout << "   * Expected number of tables for exchangability rates    = " << etTheta << std::endl;
     
     std::cout << "   * Number of MCMC chains                                 = " << numChains << std::endl;
+    std::cout << "   * Random number seed                                    = " << seed << std::endl;
     std::cout << "   * MC^3 temperature                                      = " << temperature << std::endl;
     std::cout << "   * Number of MCMC cycles                                 = " << numMcmcCycles << std::endl;
     std::cout << "   * Sample Frequency                                      = " << sampleFrequency << std::endl;
@@ -245,6 +214,7 @@ void UserSettings::usage(void) {
     std::cout << "   * -i               : Input file name" << std::endl;
     std::cout << "   * -t               : Tree file name (for constraining the analysis to a fixed tree)" << std::endl;
     std::cout << "   * -o               : Output file name" << std::endl;
+    std::cout << "   * -seed            : Random number seed (default: from the clock; printed at start-up)" << std::endl;
     std::cout << std::endl;
     
     std::cout << "   Program options for model parameters:" << std::endl;

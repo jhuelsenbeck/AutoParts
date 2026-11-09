@@ -24,11 +24,21 @@ class Table {
         void            removePatron(int idx) { patrons.erase(idx); }
         void            setRestaurant(Restaurant* r) { myRestaurant = r; }
         void            setModel(Model* m) {parm->setModel(m);}
+        long            getSerial(void) const { return serial; }
+        void            setSerial(long x) { serial = x; }
     
     private:
         std::set<int>   patrons;
         Parameter*      parm;
         Restaurant*     myRestaurant;
+        long            serial;
 };
+
+// Orders tables by the order in which they were created rather than by memory address,
+// so that iterating over tables gives the same order in every run.
+struct TableLess {
+    bool operator()(const Table* a, const Table* b) const { return a->getSerial() < b->getSerial(); }
+};
+typedef std::set<Table*,TableLess> TableSet;
 
 #endif

@@ -36,15 +36,15 @@ class Restaurant {
         
     private:
         Table*              addAuxiliaryTable(void);
-        Table*              chooseTable(std::map<Table*,double>& lnProbs);
+        Table*              chooseTable(std::map<Table*,double,TableLess>& lnProbs);
         Parameter*          copyParameter(Parameter* parmToCopy);
-        void                normalize(std::map<Table*,double>& lnProbs);
+        void                normalize(std::map<Table*,double,TableLess>& lnProbs);
         double              sampleAlpha(int k, int n, double oldAlpha, double a, double b);
         Model*              modelPtr;
         UserSettings*       settingsPtr;
         double              alpha;
         int                 numPatrons;
-        std::set<Table*>    tables;
+        TableSet    tables;
         Parameter*          parameter;
         bool                isSeatingRv;
         double              gammaAlpha;

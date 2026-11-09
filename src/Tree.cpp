@@ -449,7 +449,7 @@ void Tree::clone(Tree& t) {
         else
             pLft->setAncestor(NULL);
         pLft->removeNeighbors();
-        std::set<Node*>& rhtNeighbors = pRht->getNeighbors();
+        NodeSet& rhtNeighbors = pRht->getNeighbors();
         for (Node* n : rhtNeighbors)
             pLft->addNeighbor( nodes[n->getOffset()] );
         }
@@ -645,7 +645,7 @@ void Tree::passDown(Node* p, Node* from) {
 
     if (p != NULL)
         {
-        std::set<Node*>& neighbors = p->getNeighbors();
+        NodeSet& neighbors = p->getNeighbors();
         for (Node* n : neighbors)
             {
             if (n != from)
@@ -663,7 +663,7 @@ void Tree::passDown(Node* p, Node* from, std::vector<Node*>& dp) {
 
     if (p != NULL)
         {
-        std::set<Node*>& neighbors = p->getNeighbors();
+        NodeSet& neighbors = p->getNeighbors();
         for (Node* n : neighbors)
             {
             if (n != from)
@@ -699,7 +699,7 @@ void Tree::printNode(Node* p, int indent) {
 
     if (p != NULL)
         {
-        std::set<Node*>& neighbors = p->getNeighbors();
+        NodeSet& neighbors = p->getNeighbors();
 
         for (int i=0; i<indent; i++)
             std::cout << " ";
@@ -785,7 +785,7 @@ double Tree::randomlyCutTree(RandomVariable* rng, CutInfo& info) {
     removeBranch(p, pAnc);
     
     // remember original connection points
-    std::set<Node*>& pNeighbors = p->getNeighbors();
+    NodeSet& pNeighbors = p->getNeighbors();
     std::vector<Node*> recon;
     for (Node* n : pNeighbors)
         {
@@ -802,7 +802,7 @@ double Tree::randomlyCutTree(RandomVariable* rng, CutInfo& info) {
     else
         Msg::error("Expecting 0 or 2 nodes for reconnection pair from p");
     recon.clear();
-    std::set<Node*>& pAncNeighbors = pAnc->getNeighbors();
+    NodeSet& pAncNeighbors = pAnc->getNeighbors();
     for (Node* n : pAncNeighbors)
         {
         if (n != p)
@@ -1149,7 +1149,7 @@ void Tree::tipDescendantsFrom(Node* p, Node* from, std::set<int>& tips) {
 
     if (p != NULL)
         {
-        std::set<Node*>& neighbors = p->getNeighbors();
+        NodeSet& neighbors = p->getNeighbors();
         for (Node* n : neighbors)
             {
             if (n != from)
@@ -1176,7 +1176,7 @@ void Tree::writeTree(Node* p, std::stringstream& ss) {
             {
             ss << "(";
             }
-        std::set<Node*>& neighbors = p->getNeighbors();
+        NodeSet& neighbors = p->getNeighbors();
         std::vector<Node*> myDescendants;
         for (Node* n : neighbors)
             {

@@ -29,6 +29,7 @@ class RandomVariable {
                                     static RandomVariable singleRandomVariable;
                                     return singleRandomVariable;
                                     }
+        void                    setSeed(uint32_t seed) { initialize(seed); }
         double                  uniformRv(void);
 
     private:

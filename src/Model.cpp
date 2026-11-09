@@ -486,11 +486,11 @@ void Model::initializeParameters(UserSettings* s, std::vector<std::string> tn) {
 
 void Model::initializeProposalProbabilities(void) {
 
-    proposalProbabilities.insert( std::make_pair(treeRestaurant,       10.0) );
-    proposalProbabilities.insert( std::make_pair(treeLengthRestaurant,  2.0) );
-    proposalProbabilities.insert( std::make_pair(freqsRestaurant,       1.0) );
-    proposalProbabilities.insert( std::make_pair(ratesRestaurant,       1.0) );
-    proposalProbabilities.insert( std::make_pair(shapeRestaurant,       1.0) );
+    proposalProbabilities.push_back( std::make_pair(treeRestaurant,       10.0) );
+    proposalProbabilities.push_back( std::make_pair(treeLengthRestaurant,  2.0) );
+    proposalProbabilities.push_back( std::make_pair(freqsRestaurant,       1.0) );
+    proposalProbabilities.push_back( std::make_pair(ratesRestaurant,       1.0) );
+    proposalProbabilities.push_back( std::make_pair(shapeRestaurant,       1.0) );
     
     double sum = 0.0;
     for (const auto& r : proposalProbabilities)

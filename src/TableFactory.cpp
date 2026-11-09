@@ -24,18 +24,22 @@ void TableFactory::drainPool(void) {
 
 Table* TableFactory::getTable(void) {
 
+    static long nextSerial = 0;
+
     if ( pool.empty() == true )
         {
         /* If the branch pool is empty, we allocate a new branch and return it. We
            do not need to add it to the branch pool. */
         Table* t = new Table;
         allocated.insert( t );
+        t->setSerial(++nextSerial);
         return t;
         }
     
     // Return a branch from the branch pool, remembering to remove it from the pool.
     Table* t = pool.back();
     pool.pop_back();
+    t->setSerial(++nextSerial);
     return t;
 }
 

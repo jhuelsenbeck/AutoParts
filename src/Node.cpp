@@ -51,7 +51,7 @@ std::vector<Node*> Node::getDescendants(void) {
     return des;
 }
 
-void Node::getNeighbors(std::set<Node*>& n) {
+void Node::getNeighbors(NodeSet& n) {
 
     for (Node* p : neighbors)
         n.insert(p);

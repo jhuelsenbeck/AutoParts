@@ -7,6 +7,7 @@ Table::Table(void) {
 
     parm = NULL;
     myRestaurant = NULL;
+    serial = 0;
 }
 
 void Table::clean(void) {

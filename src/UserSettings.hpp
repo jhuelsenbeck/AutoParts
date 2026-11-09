@@ -1,6 +1,7 @@
 #ifndef UserSettings_hpp
 #define UserSettings_hpp
 
+#include <cstdint>
 #include <string>
 
 
@@ -30,6 +31,7 @@ class UserSettings {
         int             getSampleFrequency(void) { return sampleFrequency; }
         int             getTuningFrequency(void) { return tuningFrequency; }
         int             getNumChains(void) { return numChains; }
+        uint32_t        getSeed(void) { return seed; }
         int             getNumSims(void) { return numSims; }
         std::string     getSimFile(void) { return simFile; }
         double          getTemperature(void) { return temperature; }
@@ -50,6 +52,7 @@ class UserSettings {
         void            usage(void);
         
     private:
+        uint32_t        seed;
         bool            yesNo(std::string str);
         std::string     executablePath;
         std::string     inputFile;

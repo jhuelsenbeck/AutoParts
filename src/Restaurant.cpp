@@ -206,17 +206,20 @@ double Restaurant::calculateAlphaFromExpectedNumberOfTables(double expT, int np)
     return a;
 }
 
-Table* Restaurant::chooseTable(std::map<Table*,double>& lnProbs) {
+Table* Restaurant::chooseTable(std::map<Table*,double,TableLess>& lnProbs) {
 
     RandomVariable& rv = RandomVariable::randomVariableInstance();
     double u = rv.uniformRv();
     double sum = 0.0;
-    for (std::map<Table*,double>::iterator it = lnProbs.begin(); it != lnProbs.end(); it++)
+    for (std::map<Table*,double,TableLess>::iterator it = lnProbs.begin(); it != lnProbs.end(); it++)
         {
         sum += it->second;
         if (u < sum)
             return it->first;
         }
+    // the probabilities can sum to slightly less than one because of rounding
+    if (lnProbs.empty() == false)
+        return lnProbs.rbegin()->first;
     return NULL;
 }
 
@@ -266,12 +269,12 @@ double Restaurant::lnProbability(void) {
     return lnP;
 }
 
-void Restaurant::normalize(std::map<Table*,double>& lnProbs) {
+void Restaurant::normalize(std::map<Table*,double,TableLess>& lnProbs) {
 
     // find maximum value
     bool first = true;
     double maxVal = 0.0;
-    for (std::map<Table*,double>::iterator it = lnProbs.begin(); it != lnProbs.end(); it++)
+    for (std::map<Table*,double,TableLess>::iterator it = lnProbs.begin(); it != lnProbs.end(); it++)
         {
         if (first == true)
             {
@@ -286,12 +289,12 @@ void Restaurant::normalize(std::map<Table*,double>& lnProbs) {
         }
         
     // rescale
-    for (std::map<Table*,double>::iterator it = lnProbs.begin(); it != lnProbs.end(); it++)
+    for (std::map<Table*,double,TableLess>::iterator it = lnProbs.begin(); it != lnProbs.end(); it++)
         it->second -= maxVal;
         
     // exponentiate
     double sum = 0.0;
-    for (std::map<Table*,double>::iterator it = lnProbs.begin(); it != lnProbs.end(); it++)
+    for (std::map<Table*,double,TableLess>::iterator it = lnProbs.begin(); it != lnProbs.end(); it++)
         {
         double lnP = it->second;
         double p = exp(lnP);
@@ -300,14 +303,14 @@ void Restaurant::normalize(std::map<Table*,double>& lnProbs) {
         }
         
     // rescale to probs
-    for (std::map<Table*,double>::iterator it = lnProbs.begin(); it != lnProbs.end(); it++)
+    for (std::map<Table*,double,TableLess>::iterator it = lnProbs.begin(); it != lnProbs.end(); it++)
         {
         double p = it->second / sum;
         it->second = p;
         }
 
 #   if 0
-    for (std::map<Table*,double>::iterator it = lnProbs.begin(); it != lnProbs.end(); it++)
+    for (std::map<Table*,double,TableLess>::iterator it = lnProbs.begin(); it != lnProbs.end(); it++)
         std::cout << it->first << " " << it->second << std::endl;
 #   endif
 }
@@ -467,7 +470,7 @@ double Restaurant::update(double power) {
     // 2. loop over all of the patrons, reseating each (alg. 8)
     if (isSeatingRv == true)
         {
-        std::set<Table*> auxiliaryTables;
+        TableSet auxiliaryTables;
         int numAuxliaryTables = 10;
         for (int n=0; n<numPatrons; n++)
             {
@@ -496,8 +499,8 @@ double Restaurant::update(double power) {
                 auxiliaryTables.insert( addTable() );
                             
             // calculate the likelihood when the patron is seated at each of the tables (including the auxiliary tables)
-            std::map<Table*,double> tableLikes;
-            std::map<Table*,double> tableLnL;     // unheated log-likelihood of the patron at each table
+            std::map<Table*,double,TableLess> tableLikes;
+            std::map<Table*,double,TableLess> tableLnL;     // unheated log-likelihood of the patron at each table
             for (Table* t : tables)
                 {
                 t->addPatron(n);
@@ -506,7 +509,7 @@ double Restaurant::update(double power) {
                 chunk->updateTransitionProbabilities();
                 double rawLnL = chunk->lnLikelihood();
                 double lnL = rawLnL * power;
-                std::set<Table*>::iterator it = auxiliaryTables.find(t);
+                TableSet::iterator it = auxiliaryTables.find(t);
                 double lnP = 0.0;
                 if (it == auxiliaryTables.end())
                     lnP = log( (double)(t->getNumPatrons() - 1) ); // subtract the patron that was added for calculation purposes

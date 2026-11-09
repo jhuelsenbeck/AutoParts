@@ -29,6 +29,7 @@ class Chunk {
         void                        updateTransitionProbabilities(void);
         
     private:
+        double                      computeLnLikelihood(bool rescale, bool& tooSmall);
         void                        initializeTipStates(void);
         int                         id;
         int                         numSites;
@@ -38,6 +39,7 @@ class Chunk {
         ConditionalLikelihoods*     condLikes;
         TransitionProbabilities*    transProbs;
         std::vector<int>            tipStates;          // [taxon * numSites + site]: nucleotide 0-3, or -1 if ambiguous
+        std::vector<int>            scaleCounts;        // [site]: times the site's conditional likelihoods were scaled up by 2^SCALE_EXPONENT
 };
 
 #endif

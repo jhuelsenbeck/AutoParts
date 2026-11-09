@@ -1,3 +1,4 @@
+#include <cmath>
 #include <iomanip>
 #include <iostream>
 #include "Alignment.hpp"
@@ -13,6 +14,16 @@
 #undef NO_DATA
 
 #define MAX_GAMMA_CATEGORIES 64
+
+// Conditional likelihoods are rescaled to avoid underflow on large trees. The likelihood is
+// first computed without rescaling. Every factor in the calculation is at most one, so if
+// each site's probability at the root is at least MIN_UNSCALED_SITE_PROB, nothing that
+// contributes to it can have underflowed and that result is used. Otherwise it is computed
+// again with rescaling: when the largest value for a site at a node drops below
+// 2^-SCALE_EXPONENT, the site's values at that node are multiplied by 2^SCALE_EXPONENT,
+// which is exact.
+#define SCALE_EXPONENT 256
+#define MIN_UNSCALED_SITE_PROB 1e-290
 
 
 Chunk::Chunk(const Chunk& c) {
@@ -65,6 +76,28 @@ void Chunk::flipActiveEigens(void) {
 }
 
 namespace {
+
+    // scale up any site whose conditional likelihoods at this node are close to underflowing
+    inline void rescaleNode(double* clP, int* scaleCounts, int numSites, int numCats) {
+
+        const double threshold = std::ldexp(1.0, -SCALE_EXPONENT);
+        const double factor    = std::ldexp(1.0,  SCALE_EXPONENT);
+        const int n = 4 * numCats;
+        for (int c=0; c<numSites; c++)
+            {
+            double maxVal = 0.0;
+            for (int i=0; i<n; i++)
+                maxVal = (clP[i] > maxVal) ? clP[i] : maxVal;
+            while (maxVal < threshold && maxVal > 0.0)
+                {
+                for (int i=0; i<n; i++)
+                    clP[i] *= factor;
+                maxVal *= factor;
+                scaleCounts[c]++;
+                }
+            clP += n;
+            }
+    }
 
     // The conditional likelihoods are stored as [site][gamma category][state] and the
     // transition probability matrices are column major, so column j of matrix T is
@@ -161,6 +194,17 @@ double Chunk::lnLikelihood(void) {
     return 0.0;
 #   endif
 
+    bool tooSmall = false;
+    double lnL = computeLnLikelihood(false, tooSmall);
+    if (tooSmall == true)
+        lnL = computeLnLikelihood(true, tooSmall);
+    return lnL;
+}
+
+double Chunk::computeLnLikelihood(bool rescale, bool& tooSmall) {
+
+    tooSmall = false;
+
     // get the tree and a vector containing all of the transition probabilities
     Tree* t = model->getTree(id);
     std::vector<std::vector<NucleotideSquareMatrix_t> >& tp = transProbs->getTransitionProbabilities();
@@ -171,6 +215,8 @@ double Chunk::lnLikelihood(void) {
         Msg::error("Too many gamma categories for the likelihood calculation");
     
     const double* T[MAX_GAMMA_CATEGORIES];
+    if (rescale == true)
+        scaleCounts.assign(numSites, 0);
     for (int n=0; n<dpSeq.size(); n++)
         {
         Node* p = dpSeq[n];
@@ -205,6 +251,8 @@ double Chunk::lnLikelihood(void) {
                         applyInternalChild<false>(clP, clD, T, numSites, numGammaCategories);
                     }
                 }
+            if (rescale == true)
+                rescaleNode(clP, scaleCounts.data(), numSites, numGammaCategories);
             }
         }
         
@@ -222,8 +270,16 @@ double Chunk::lnLikelihood(void) {
                 prob += clRoot[i] * f[i] * catProb;
             clRoot += 4;
             }
+        if (rescale == false && !(prob >= MIN_UNSCALED_SITE_PROB))
+            {
+            tooSmall = true;    // possible underflow: the caller recomputes with rescaling
+            return 0.0;
+            }
         int numSitesOfPattern = alignment->getNumSitesOfPattern(c);
-        lnL += numSitesOfPattern * log(prob);
+        double lnProb = log(prob);
+        if (rescale == true && scaleCounts[c] > 0)
+            lnProb -= scaleCounts[c] * SCALE_EXPONENT * std::log(2.0);
+        lnL += numSitesOfPattern * lnProb;
         }
         
     return lnL;

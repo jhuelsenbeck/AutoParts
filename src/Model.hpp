@@ -74,7 +74,7 @@ class Model {
         Restaurant*                     freqsRestaurant;
         Restaurant*                     ratesRestaurant;
         Restaurant*                     shapeRestaurant;
-        std::map<Restaurant*,double>    proposalProbabilities;
+        std::vector<std::pair<Restaurant*,double> > proposalProbabilities;   // in a fixed order
         std::vector<double>             chunkLnL;                 // cached log-likelihood of each data subset
         bool                            chunkLnLValid = false;    // filled on first use by getChunkLnLs()
 };
