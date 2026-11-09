@@ -1,0 +1,105 @@
+# The analyses of the paper, one per line, run in order by run_all.sh:
+#   <name> <seed> <arguments to autoparts>
+# Output goes to Analyses/Output/<name>.{tsv,tre,log}. Lines can be removed, reordered,
+# or commented out with #. Each run has its own seed (in place of the "sleep 1" between
+# replicates in the original command lists).
+#
+# Gall wasps (cynmix) and skinks: from Empirical/empirical_analyses.txt. Hummingbirds:
+# as described in the paper (K = 9 subsets, so E(k) = 1.2, 2, 4, 6, 8, 8.8, with the
+# concentration fixed and random, two replicates each; MC^3 with three chains spaced 0.2
+# apart, the spacing fixed as in the paper). Together these are the paper's 80 empirical
+# analyses. Simulations: from Simulation/simulation_analyses.txt (each run analyzes 25
+# simulated data sets). The samples are taken every 100 cycles (-s 100), as in the
+# original runs, whose output files have 20,001 samples per run.
+empirical/cynmix/cynmix_hyper_1.2_1 1001 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -mT 1.2 -c no
+empirical/cynmix/cynmix_hyper_1.2_2 1002 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -mT 1.2 -c no
+empirical/cynmix/cynmix_hyper_2.0_1 1003 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -mT 2.0 -c no
+empirical/cynmix/cynmix_hyper_2.0_2 1004 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -mT 2.0 -c no
+empirical/cynmix/cynmix_hyper_4.0_1 1005 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -mT 4.0 -c no
+empirical/cynmix/cynmix_hyper_4.0_2 1006 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -mT 4.0 -c no
+empirical/cynmix/cynmix_hyper_6.0_1 1007 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -mT 6.0 -c no
+empirical/cynmix/cynmix_hyper_6.0_2 1008 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -mT 6.0 -c no
+empirical/cynmix/cynmix_1.2_1 1009 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -ePi 1.2 -eTheta 1.2 -eShape 1.2 -eLength 1.2 -c yes
+empirical/cynmix/cynmix_1.2_2 1010 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -ePi 1.2 -eTheta 1.2 -eShape 1.2 -eLength 1.2 -c yes
+empirical/cynmix/cynmix_2.0_1 1011 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -ePi 2.0 -eTheta 2.0 -eShape 2.0 -eLength 2.0 -c yes
+empirical/cynmix/cynmix_2.0_2 1012 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -ePi 2.0 -eTheta 2.0 -eShape 2.0 -eLength 2.0 -c yes
+empirical/cynmix/cynmix_4.0_1 1013 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -ePi 4.0 -eTheta 4.0 -eShape 4.0 -eLength 4.0 -c yes
+empirical/cynmix/cynmix_4.0_2 1014 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -ePi 4.0 -eTheta 4.0 -eShape 4.0 -eLength 4.0 -c yes
+empirical/cynmix/cynmix_6.0_1 1015 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -ePi 6.0 -eTheta 6.0 -eShape 6.0 -eLength 6.0 -c yes
+empirical/cynmix/cynmix_6.0_2 1016 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -ePi 6.0 -eTheta 6.0 -eShape 6.0 -eLength 6.0 -c yes
+empirical/cynmix/cynmix_hyper_8.0_1 1017 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -mT 8.0 -c no
+empirical/cynmix/cynmix_hyper_8.0_2 1018 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -mT 8.0 -c no
+empirical/cynmix/cynmix_hyper_10.0_1 1019 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -mT 10.0 -c no
+empirical/cynmix/cynmix_hyper_10.0_2 1020 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -mT 10.0 -c no
+empirical/cynmix/cynmix_hyper_10.8_1 1021 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -mT 10.8 -c no
+empirical/cynmix/cynmix_hyper_10.8_2 1022 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -mT 10.8 -c no
+empirical/cynmix/cynmix_8.0_1 1023 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -ePi 8.0 -eTheta 8.0 -eShape 8.0 -eLength 8.0 -c yes
+empirical/cynmix/cynmix_8.0_2 1024 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -ePi 8.0 -eTheta 8.0 -eShape 8.0 -eLength 8.0 -c yes
+empirical/cynmix/cynmix_10.0_1 1025 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -ePi 10.0 -eTheta 10.0 -eShape 10.0 -eLength 10.0 -c yes
+empirical/cynmix/cynmix_10.0_2 1026 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -ePi 10.0 -eTheta 10.0 -eShape 10.0 -eLength 10.0 -c yes
+empirical/cynmix/cynmix_10.8_1 1027 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -ePi 10.8 -eTheta 10.8 -eShape 10.8 -eLength 10.8 -c yes
+empirical/cynmix/cynmix_10.8_2 1028 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -ePi 10.8 -eTheta 10.8 -eShape 10.8 -eLength 10.8 -c yes
+empirical/skinks/skinks_hyper_1.2_1 1029 -i Analyses/Empirical/skinks_analyses/skinks.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -mT 1.2 -c no
+empirical/skinks/skinks_hyper_1.2_2 1030 -i Analyses/Empirical/skinks_analyses/skinks.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -mT 1.2 -c no
+empirical/skinks/skinks_hyper_2.0_1 1031 -i Analyses/Empirical/skinks_analyses/skinks.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -mT 2.0 -c no
+empirical/skinks/skinks_hyper_2.0_2 1032 -i Analyses/Empirical/skinks_analyses/skinks.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -mT 2.0 -c no
+empirical/skinks/skinks_hyper_4.0_1 1033 -i Analyses/Empirical/skinks_analyses/skinks.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -mT 4.0 -c no
+empirical/skinks/skinks_hyper_4.0_2 1034 -i Analyses/Empirical/skinks_analyses/skinks.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -mT 4.0 -c no
+empirical/skinks/skinks_hyper_6.0_1 1035 -i Analyses/Empirical/skinks_analyses/skinks.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -mT 6.0 -c no
+empirical/skinks/skinks_hyper_6.0_2 1036 -i Analyses/Empirical/skinks_analyses/skinks.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -mT 6.0 -c no
+empirical/skinks/skinks_1.2_1 1037 -i Analyses/Empirical/skinks_analyses/skinks.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -ePi 1.2 -eTheta 1.2 -eShape 1.2 -eLength 1.2 -c yes
+empirical/skinks/skinks_1.2_2 1038 -i Analyses/Empirical/skinks_analyses/skinks.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -ePi 1.2 -eTheta 1.2 -eShape 1.2 -eLength 1.2 -c yes
+empirical/skinks/skinks_2.0_1 1039 -i Analyses/Empirical/skinks_analyses/skinks.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -ePi 2.0 -eTheta 2.0 -eShape 2.0 -eLength 2.0 -c yes
+empirical/skinks/skinks_2.0_2 1040 -i Analyses/Empirical/skinks_analyses/skinks.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -ePi 2.0 -eTheta 2.0 -eShape 2.0 -eLength 2.0 -c yes
+empirical/skinks/skinks_4.0_1 1041 -i Analyses/Empirical/skinks_analyses/skinks.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -ePi 4.0 -eTheta 4.0 -eShape 4.0 -eLength 4.0 -c yes
+empirical/skinks/skinks_4.0_2 1042 -i Analyses/Empirical/skinks_analyses/skinks.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -ePi 4.0 -eTheta 4.0 -eShape 4.0 -eLength 4.0 -c yes
+empirical/skinks/skinks_6.0_1 1043 -i Analyses/Empirical/skinks_analyses/skinks.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -ePi 6.0 -eTheta 6.0 -eShape 6.0 -eLength 6.0 -c yes
+empirical/skinks/skinks_6.0_2 1044 -i Analyses/Empirical/skinks_analyses/skinks.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -ePi 6.0 -eTheta 6.0 -eShape 6.0 -eLength 6.0 -c yes
+empirical/skinks/skinks_hyper_8.0_1 1045 -i Analyses/Empirical/skinks_analyses/skinks.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -mT 8.0 -c no
+empirical/skinks/skinks_hyper_8.0_2 1046 -i Analyses/Empirical/skinks_analyses/skinks.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -mT 8.0 -c no
+empirical/skinks/skinks_hyper_10.0_1 1047 -i Analyses/Empirical/skinks_analyses/skinks.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -mT 10.0 -c no
+empirical/skinks/skinks_hyper_10.0_2 1048 -i Analyses/Empirical/skinks_analyses/skinks.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -mT 10.0 -c no
+empirical/skinks/skinks_hyper_10.8_1 1049 -i Analyses/Empirical/skinks_analyses/skinks.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -mT 10.8 -c no
+empirical/skinks/skinks_hyper_10.8_2 1050 -i Analyses/Empirical/skinks_analyses/skinks.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -mT 10.8 -c no
+empirical/skinks/skinks_8.0_1 1051 -i Analyses/Empirical/skinks_analyses/skinks.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -ePi 8.0 -eTheta 8.0 -eShape 8.0 -eLength 8.0 -c yes
+empirical/skinks/skinks_8.0_2 1052 -i Analyses/Empirical/skinks_analyses/skinks.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -ePi 8.0 -eTheta 8.0 -eShape 8.0 -eLength 8.0 -c yes
+empirical/skinks/skinks_10.0_1 1053 -i Analyses/Empirical/skinks_analyses/skinks.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -ePi 10.0 -eTheta 10.0 -eShape 10.0 -eLength 10.0 -c yes
+empirical/skinks/skinks_10.0_2 1054 -i Analyses/Empirical/skinks_analyses/skinks.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -ePi 10.0 -eTheta 10.0 -eShape 10.0 -eLength 10.0 -c yes
+empirical/skinks/skinks_10.8_1 1055 -i Analyses/Empirical/skinks_analyses/skinks.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -ePi 10.8 -eTheta 10.8 -eShape 10.8 -eLength 10.8 -c yes
+empirical/skinks/skinks_10.8_2 1056 -i Analyses/Empirical/skinks_analyses/skinks.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -ePi 10.8 -eTheta 10.8 -eShape 10.8 -eLength 10.8 -c yes
+empirical/hummer/hummer_hyper_1.2_1 1069 -i Analyses/Empirical/hummer_analyses/hummer.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -nc 3 -temp 0.2 -tuneTemp no -mT 1.2 -c no
+empirical/hummer/hummer_hyper_1.2_2 1070 -i Analyses/Empirical/hummer_analyses/hummer.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -nc 3 -temp 0.2 -tuneTemp no -mT 1.2 -c no
+empirical/hummer/hummer_1.2_1 1071 -i Analyses/Empirical/hummer_analyses/hummer.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -nc 3 -temp 0.2 -tuneTemp no -ePi 1.2 -eTheta 1.2 -eShape 1.2 -eLength 1.2 -c yes
+empirical/hummer/hummer_1.2_2 1072 -i Analyses/Empirical/hummer_analyses/hummer.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -nc 3 -temp 0.2 -tuneTemp no -ePi 1.2 -eTheta 1.2 -eShape 1.2 -eLength 1.2 -c yes
+empirical/hummer/hummer_hyper_2.0_1 1073 -i Analyses/Empirical/hummer_analyses/hummer.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -nc 3 -temp 0.2 -tuneTemp no -mT 2.0 -c no
+empirical/hummer/hummer_hyper_2.0_2 1074 -i Analyses/Empirical/hummer_analyses/hummer.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -nc 3 -temp 0.2 -tuneTemp no -mT 2.0 -c no
+empirical/hummer/hummer_2.0_1 1075 -i Analyses/Empirical/hummer_analyses/hummer.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -nc 3 -temp 0.2 -tuneTemp no -ePi 2.0 -eTheta 2.0 -eShape 2.0 -eLength 2.0 -c yes
+empirical/hummer/hummer_2.0_2 1076 -i Analyses/Empirical/hummer_analyses/hummer.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -nc 3 -temp 0.2 -tuneTemp no -ePi 2.0 -eTheta 2.0 -eShape 2.0 -eLength 2.0 -c yes
+empirical/hummer/hummer_hyper_4.0_1 1077 -i Analyses/Empirical/hummer_analyses/hummer.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -nc 3 -temp 0.2 -tuneTemp no -mT 4.0 -c no
+empirical/hummer/hummer_hyper_4.0_2 1078 -i Analyses/Empirical/hummer_analyses/hummer.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -nc 3 -temp 0.2 -tuneTemp no -mT 4.0 -c no
+empirical/hummer/hummer_4.0_1 1079 -i Analyses/Empirical/hummer_analyses/hummer.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -nc 3 -temp 0.2 -tuneTemp no -ePi 4.0 -eTheta 4.0 -eShape 4.0 -eLength 4.0 -c yes
+empirical/hummer/hummer_4.0_2 1080 -i Analyses/Empirical/hummer_analyses/hummer.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -nc 3 -temp 0.2 -tuneTemp no -ePi 4.0 -eTheta 4.0 -eShape 4.0 -eLength 4.0 -c yes
+empirical/hummer/hummer_hyper_6.0_1 1081 -i Analyses/Empirical/hummer_analyses/hummer.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -nc 3 -temp 0.2 -tuneTemp no -mT 6.0 -c no
+empirical/hummer/hummer_hyper_6.0_2 1082 -i Analyses/Empirical/hummer_analyses/hummer.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -nc 3 -temp 0.2 -tuneTemp no -mT 6.0 -c no
+empirical/hummer/hummer_6.0_1 1083 -i Analyses/Empirical/hummer_analyses/hummer.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -nc 3 -temp 0.2 -tuneTemp no -ePi 6.0 -eTheta 6.0 -eShape 6.0 -eLength 6.0 -c yes
+empirical/hummer/hummer_6.0_2 1084 -i Analyses/Empirical/hummer_analyses/hummer.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -nc 3 -temp 0.2 -tuneTemp no -ePi 6.0 -eTheta 6.0 -eShape 6.0 -eLength 6.0 -c yes
+empirical/hummer/hummer_hyper_8.0_1 1085 -i Analyses/Empirical/hummer_analyses/hummer.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -nc 3 -temp 0.2 -tuneTemp no -mT 8.0 -c no
+empirical/hummer/hummer_hyper_8.0_2 1086 -i Analyses/Empirical/hummer_analyses/hummer.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -nc 3 -temp 0.2 -tuneTemp no -mT 8.0 -c no
+empirical/hummer/hummer_8.0_1 1087 -i Analyses/Empirical/hummer_analyses/hummer.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -nc 3 -temp 0.2 -tuneTemp no -ePi 8.0 -eTheta 8.0 -eShape 8.0 -eLength 8.0 -c yes
+empirical/hummer/hummer_8.0_2 1088 -i Analyses/Empirical/hummer_analyses/hummer.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -nc 3 -temp 0.2 -tuneTemp no -ePi 8.0 -eTheta 8.0 -eShape 8.0 -eLength 8.0 -c yes
+empirical/hummer/hummer_hyper_8.8_1 1089 -i Analyses/Empirical/hummer_analyses/hummer.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -nc 3 -temp 0.2 -tuneTemp no -mT 8.8 -c no
+empirical/hummer/hummer_hyper_8.8_2 1090 -i Analyses/Empirical/hummer_analyses/hummer.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -nc 3 -temp 0.2 -tuneTemp no -mT 8.8 -c no
+empirical/hummer/hummer_8.8_1 1091 -i Analyses/Empirical/hummer_analyses/hummer.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -nc 3 -temp 0.2 -tuneTemp no -ePi 8.8 -eTheta 8.8 -eShape 8.8 -eLength 8.8 -c yes
+empirical/hummer/hummer_8.8_2 1092 -i Analyses/Empirical/hummer_analyses/hummer.in -s 100 -n 2000000 -p 1000 -b 20000 -g 4 -nc 3 -temp 0.2 -tuneTemp no -ePi 8.8 -eTheta 8.8 -eShape 8.8 -eLength 8.8 -c yes
+simulation/hyper_1.2_1 1057 -si Analyses/Output/simulation/hyper_1.2_1.sim.phy -s 1000 -n 1000000 -p 1000 -b 40000 -g 4 -mT 1.2 -nSi 25 -c no -tFreqs 800 -tRates 800
+simulation/hyper_1.2_2 1058 -si Analyses/Output/simulation/hyper_1.2_2.sim.phy -s 1000 -n 1000000 -p 1000 -b 40000 -g 4 -mT 1.2 -nSi 25 -c no -tFreqs 800 -tRates 800
+simulation/hyper_3.0_1 1059 -si Analyses/Output/simulation/hyper_3.0_1.sim.phy -s 1000 -n 1000000 -p 1000 -b 40000 -g 4 -mT 3.0 -nSi 25 -c no -tFreqs 500 -tRates 500
+simulation/hyper_3.0_2 1060 -si Analyses/Output/simulation/hyper_3.0_2.sim.phy -s 1000 -n 1000000 -p 1000 -b 40000 -g 4 -mT 3.0 -nSi 25 -c no -tFreqs 500 -tRates 500
+simulation/hyper_5.8_1 1061 -si Analyses/Output/simulation/hyper_5.8_1.sim.phy -s 1000 -n 1000000 -p 1000 -b 40000 -g 4 -mT 5.8 -nSi 25 -c no
+simulation/hyper_5.8_2 1062 -si Analyses/Output/simulation/hyper_5.8_2.sim.phy -s 1000 -n 1000000 -p 1000 -b 40000 -g 4 -mT 5.8 -nSi 25 -c no
+simulation/fixed_1.2_1 1063 -si Analyses/Output/simulation/fixed_1.2_1.sim.phy -s 1000 -n 1000000 -p 1000 -b 40000 -g 4 -nSi 25 -ePi 1.2 -eTheta 1.2 -eShape 1.2 -eLength 1.2 -c yes -tFreqs 800 -tRates 800
+simulation/fixed_1.2_2 1064 -si Analyses/Output/simulation/fixed_1.2_2.sim.phy -s 1000 -n 1000000 -p 1000 -b 40000 -g 4 -nSi 25 -ePi 1.2 -eTheta 1.2 -eShape 1.2 -eLength 1.2 -c yes -tFreqs 800 -tRates 800
+simulation/fixed_3.0_1 1065 -si Analyses/Output/simulation/fixed_3.0_1.sim.phy -s 1000 -n 1000000 -p 1000 -b 40000 -g 4 -nSi 25 -ePi 3.0 -eTheta 3.0 -eShape 3.0 -eLength 3.0 -c yes -tFreqs 500 -tRates 500
+simulation/fixed_3.0_2 1066 -si Analyses/Output/simulation/fixed_3.0_2.sim.phy -s 1000 -n 1000000 -p 1000 -b 40000 -g 4 -nSi 25 -ePi 3.0 -eTheta 3.0 -eShape 3.0 -eLength 3.0 -c yes -tFreqs 500 -tRates 500
+simulation/fixed_5.8_1 1067 -si Analyses/Output/simulation/fixed_5.8_1.sim.phy -s 1000 -n 1000000 -p 1000 -b 40000 -g 4 -nSi 25 -ePi 5.8 -eTheta 5.8 -eShape 5.8 -eLength 5.8 -c yes
+simulation/fixed_5.8_2 1068 -si Analyses/Output/simulation/fixed_5.8_2.sim.phy -s 1000 -n 1000000 -p 1000 -b 40000 -g 4 -nSi 25 -ePi 5.8 -eTheta 5.8 -eShape 5.8 -eLength 5.8 -c yes

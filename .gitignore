@@ -4,3 +4,5 @@
 /partition_distance/testing
 devcontainer.json
 reinstall-cmake.sh
+
+/build-runs

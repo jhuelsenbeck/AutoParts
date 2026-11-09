@@ -1,0 +1,532 @@
+   AutoParts v1.0
+   * John P. Huelsenbeck(1), Brian Moore(2), Anna Chriss(1) and Wesley DeMontigny (3)
+   * (1) University of California, Berkeley
+   * (2) University of California, Davis
+   * (3) University of Maryland, College Park
+
+   User Settings
+   * Executable path                                       = "/Users/johnh/GitHub/AnnaAutoparts/build-runs/autoparts"
+   * Input file path and name                              = "Analyses/Empirical/cynmix_analyses/cynmix.in"
+   * Tree file path and name                               = ""
+   * Output file path and name                             = "/Users/johnh/GitHub/AnnaAutoparts/Analyses/Output/empirical/cynmix/cynmix_hyper_1.2_1"
+   * Tree length mean                                      = 1.000
+   * Tree length standard deviation                        = 1.000
+   * Exponential parameter for gamma shape                 = 1.000
+   * Number of gamma categories                            = 4
+   * Concentration parameter is fixed                      = no
+   * Concentration parameter mean (when r.v.)              = 3.000
+   * Expected number of tables (when conc. is r.v.)        = 1.200
+   * Concentration parameter variance (when r.v.)          = 1.000
+   * Expected number of tables for tree length             = 1.200
+   * Expected number of tables for gamma shape             = 1.200
+   * Expected number of tables for base frequencies        = 1.200
+   * Expected number of tables for exchangability rates    = 1.200
+   * Number of MCMC chains                                 = 1
+   * Random number seed                                    = 1001
+   * Number of threads                                     = 18
+   * Number of auxiliary tables (Neal's m)                 = 10
+   * MC^3 temperature (starting value, if tuned)           = 0.200
+   * MC^3 temperature tuned during the burn-in             = yes
+   * Number of MCMC cycles                                 = 2000000
+   * Sample Frequency                                      = 100
+   * Print Frequency                                       = 1000
+   * Burn in                                               = 20000
+   * Tuning Frequency                                      = 100
+   * MCMC tuning parameter for the tree topology parameter = 3200.000
+   * MCMC tuning parameter for the gamma shape parameter   = 1.386
+   * MCMC tuning parameter for the base frequencies (D)    = 600.000
+   * MCMC tuning parameter for the substitution rates (D)  = 600.000
+   * MCMC tuning parameter for the base frequencies (B)    = 600.000
+   * MCMC tuning parameter for the substitution rates (B)  = 600.000
+   * MCMC tuning parameter for the tree length parameter   = 1.386
+   * MCMC tuning parameter for the TBR heat parameter      = 0.100
+   * MCMC tuning parameter for the branch proportions      = 200.000
+
+   Reading data
+   * File = "Analyses/Empirical/cynmix_analyses/cynmix.in"
+   * Number of sites for subset 1 = 360
+   * Number of sites for subset 2 = 359
+   * Number of sites for subset 3 = 359
+   * Number of sites for subset 4 = 123
+   * Number of sites for subset 5 = 122
+   * Number of sites for subset 6 = 122
+   * Number of sites for subset 7 = 161
+   * Number of sites for subset 8 = 160
+   * Number of sites for subset 9 = 160
+   * Number of sites for subset 10 = 811
+   * Number of sites for subset 11 = 343
+
+   Initializing phylogenetic model
+   * Parameter Tree subset arrangement is fixed (all subsets grouped together)
+   *    Fixed RGF = 1,1,1,1,1,1,1,1,1,1,1
+   * Parameter Tree Length subset arrangement is a random variable following a DPP with a gamma hyperprior on alpha
+   *    Initial Alpha = 2.320
+   *    Initial RGF = 1,2,3,2,2,2,2,2,1,4,2
+   * Parameter Base Frequencies subset arrangement is a random variable following a DPP with a gamma hyperprior on alpha
+   *    Initial Alpha = 0.039
+   *    Initial RGF = 1,1,1,1,1,1,1,1,1,1,1
+   * Parameter Exchangeability Rates subset arrangement is a random variable following a DPP with a gamma hyperprior on alpha
+   *    Initial Alpha = 0.000
+   *    Initial RGF = 1,1,1,1,1,1,1,1,1,1,1
+   * Parameter Gamma Shape subset arrangement is a random variable following a DPP with a gamma hyperprior on alpha
+   *    Initial Alpha = 0.625
+   *    Initial RGF = 1,1,1,1,1,1,1,1,1,1,1
+
+   Markov Chain Monte Carlo Burn-In:
+   *    1 -- -42287.303
+   *    1000 -- -23100.624
+
+   Tuning Parameters (cold chain, last 100 cycles)...
+   * MCMC Acceptance Rates:
+   * Parameter                            Tries   Accep    Freq      Tuning
+   * --------------------------------- ------------------------------------
+   * Gamma Shape                             41      22   53.7%      1.3923
+   * Base Frequencies (Beta)                 18       8   44.4%     38.8516
+   * Base Frequencies (Dirichlet)            31       5   16.1%    276.4425
+   * Exchangeability Rates (Beta)            51      31   60.8%     11.1499
+   * Exchangeability Rates (Dirichlet)       50      12   24.0%    220.8890
+   * Tree (TBR)                              17       2   11.8%      0.1000
+   * Tree (LOCAL)                            19       6   31.6%   3200.0000
+   * Tree (Branch Proportions)               26      18   69.2%     66.1351
+   * Tree (Tree Length)                     129      62   48.1%      0.7339
+
+   *    2000 -- -22834.7901
+
+   Tuning Parameters (cold chain, last 100 cycles)...
+   * MCMC Acceptance Rates:
+   * Parameter                            Tries   Accep    Freq      Tuning
+   * --------------------------------- ------------------------------------
+   * Gamma Shape                             53      21   39.6%      1.4120
+   * Base Frequencies (Beta)                 12       4   33.3%     28.3219
+   * Base Frequencies (Dirichlet)            17       7   41.2%    319.5851
+   * Exchangeability Rates (Beta)            23      12   52.2%      5.4028
+   * Exchangeability Rates (Dirichlet)       40      14   35.0%    249.9747
+   * Tree (TBR)                              22       2    9.1%      0.1000
+   * Tree (LOCAL)                            23       3   13.0%   3200.0000
+   * Tree (Branch Proportions)               16       8   50.0%     48.0810
+   * Tree (Tree Length)                     182      85   46.7%      0.7973
+
+   *    3000 -- -22818.4542
+
+   Tuning Parameters (cold chain, last 100 cycles)...
+   * MCMC Acceptance Rates:
+   * Parameter                            Tries   Accep    Freq      Tuning
+   * --------------------------------- ------------------------------------
+   * Gamma Shape                             23      10   43.5%      1.4203
+   * Base Frequencies (Beta)                 26      12   46.2%     29.7347
+   * Base Frequencies (Dirichlet)            20       4   20.0%    275.6850
+   * Exchangeability Rates (Beta)             8       3   37.5%      4.8174
+   * Exchangeability Rates (Dirichlet)       12       3   25.0%    194.7939
+   * Tree (TBR)                              19       1    5.3%      0.1000
+   * Tree (LOCAL)                            25       4   16.0%   3200.0000
+   * Tree (Branch Proportions)               23      13   56.5%     53.6580
+   * Tree (Tree Length)                     187      78   41.7%      0.7424
+
+   *    4000 -- -22816.4351
+
+   Tuning Parameters (cold chain, last 100 cycles)...
+   * MCMC Acceptance Rates:
+   * Parameter                            Tries   Accep    Freq      Tuning
+   * --------------------------------- ------------------------------------
+   * Gamma Shape                             38      17   44.7%      1.4113
+   * Base Frequencies (Beta)                  9       5   55.6%     29.1696
+   * Base Frequencies (Dirichlet)            24       8   33.3%    318.2109
+   * Exchangeability Rates (Beta)            40      24   60.0%      3.9924
+   * Exchangeability Rates (Dirichlet)       37      11   29.7%    181.3414
+   * Tree (TBR)                              22       0    0.0%      0.1000
+   * Tree (LOCAL)                            16       2   12.5%   3200.0000
+   * Tree (Branch Proportions)               29      12   41.4%     57.1049
+   * Tree (Tree Length)                     105      53   50.5%      0.7583
+
+   *    5000 -- -22788.2801
+
+   Tuning Parameters (cold chain, last 100 cycles)...
+   * MCMC Acceptance Rates:
+   * Parameter                            Tries   Accep    Freq      Tuning
+   * --------------------------------- ------------------------------------
+   * Gamma Shape                             61      24   39.3%      1.3101
+   * Base Frequencies (Beta)                  6       2   33.3%     28.1984
+   * Base Frequencies (Dirichlet)            15       6   40.0%    354.6640
+   * Exchangeability Rates (Beta)            18      10   55.6%      3.3157
+   * Exchangeability Rates (Dirichlet)       13       2   15.4%    218.2623
+   * Tree (TBR)                              26       1    3.8%      0.1000
+   * Tree (LOCAL)                            23       4   17.4%   3200.0000
+   * Tree (Branch Proportions)               20      11   55.0%     42.7186
+   * Tree (Tree Length)                     130      59   45.4%      0.7620
+
+   *    6000 -- -22791.6782
+
+   Tuning Parameters (cold chain, last 100 cycles)...
+   * MCMC Acceptance Rates:
+   * Parameter                            Tries   Accep    Freq      Tuning
+   * --------------------------------- ------------------------------------
+   * Gamma Shape                             48      19   39.6%      1.3732
+   * Base Frequencies (Beta)                 20      10   50.0%     23.8740
+   * Base Frequencies (Dirichlet)            12       1    8.3%    328.1946
+   * Exchangeability Rates (Beta)            32      15   46.9%      3.1446
+   * Exchangeability Rates (Dirichlet)       29       6   20.7%    243.8684
+   * Tree (TBR)                              23       4   17.4%      0.1000
+   * Tree (LOCAL)                            21       2    9.5%   3200.0000
+   * Tree (Branch Proportions)               26      10   38.5%     38.0552
+   * Tree (Tree Length)                     120      42   35.0%      0.7990
+
+   *    7000 -- -22787.2210
+
+   Tuning Parameters (cold chain, last 100 cycles)...
+   * MCMC Acceptance Rates:
+   * Parameter                            Tries   Accep    Freq      Tuning
+   * --------------------------------- ------------------------------------
+   * Gamma Shape                             63      28   44.4%      1.3830
+   * Base Frequencies (Beta)                 30      13   43.3%     22.2733
+   * Base Frequencies (Dirichlet)            30      10   33.3%    313.1885
+   * Exchangeability Rates (Beta)            15       5   33.3%      3.0173
+   * Exchangeability Rates (Dirichlet)       28       8   28.6%    267.7998
+   * Tree (TBR)                              21       0    0.0%      0.1000
+   * Tree (LOCAL)                            22       3   13.6%   3200.0000
+   * Tree (Branch Proportions)               22      11   50.0%     40.2522
+   * Tree (Tree Length)                     106      53   50.0%      0.7376
+
+   *    8000 -- -22801.6901
+
+   Tuning Parameters (cold chain, last 100 cycles)...
+   * MCMC Acceptance Rates:
+   * Parameter                            Tries   Accep    Freq      Tuning
+   * --------------------------------- ------------------------------------
+   * Gamma Shape                             35      14   40.0%      1.4537
+   * Base Frequencies (Beta)                 22       9   40.9%     22.6093
+   * Base Frequencies (Dirichlet)            19       5   26.3%    293.1631
+   * Exchangeability Rates (Beta)            36      20   55.6%      2.8429
+   * Exchangeability Rates (Dirichlet)       32       8   25.0%    258.1570
+   * Tree (TBR)                              22       3   13.6%      0.1000
+   * Tree (LOCAL)                            20       1    5.0%   3200.0000
+   * Tree (Branch Proportions)               23       7   30.4%     39.7002
+   * Tree (Tree Length)                     106      42   39.6%      0.7772
+
+   *    9000 -- -22790.3213
+
+   Tuning Parameters (cold chain, last 100 cycles)...
+   * MCMC Acceptance Rates:
+   * Parameter                            Tries   Accep    Freq      Tuning
+   * --------------------------------- ------------------------------------
+   * Gamma Shape                             53      26   49.1%      1.3921
+   * Base Frequencies (Beta)                 31      13   41.9%     23.4004
+   * Base Frequencies (Dirichlet)            23       9   39.1%    308.8978
+   * Exchangeability Rates (Beta)            23      11   47.8%      2.6402
+   * Exchangeability Rates (Dirichlet)       33       6   18.2%    229.9089
+   * Tree (TBR)                              24       3   12.5%      0.1000
+   * Tree (LOCAL)                            25       2    8.0%   3200.0000
+   * Tree (Branch Proportions)               18      12   66.7%     39.3775
+   * Tree (Tree Length)                     128      46   35.9%      0.7657
+
+   *    10000 -- -22804.2701
+
+   Tuning Parameters (cold chain, last 100 cycles)...
+   * MCMC Acceptance Rates:
+   * Parameter                            Tries   Accep    Freq      Tuning
+   * --------------------------------- ------------------------------------
+   * Gamma Shape                             64      33   51.6%      1.3879
+   * Base Frequencies (Beta)                 27       8   29.6%     21.7454
+   * Base Frequencies (Dirichlet)            31      10   32.3%    277.6157
+   * Exchangeability Rates (Beta)            26      17   65.4%      2.4586
+   * Exchangeability Rates (Dirichlet)       17       6   35.3%    248.0419
+   * Tree (TBR)                              19       1    5.3%      0.1000
+   * Tree (LOCAL)                            25       3   12.0%   3200.0000
+   * Tree (Branch Proportions)               21       6   28.6%     37.0413
+   * Tree (Tree Length)                     104      40   38.5%      0.7669
+
+   *    11000 -- -22807.3081
+
+   Tuning Parameters (cold chain, last 100 cycles)...
+   * MCMC Acceptance Rates:
+   * Parameter                            Tries   Accep    Freq      Tuning
+   * --------------------------------- ------------------------------------
+   * Gamma Shape                             53      21   39.6%      1.5496
+   * Base Frequencies (Beta)                 33      12   36.4%     24.0111
+   * Base Frequencies (Dirichlet)            41      11   26.8%    280.0884
+   * Exchangeability Rates (Beta)            27      11   40.7%      2.3717
+   * Exchangeability Rates (Dirichlet)       44      13   29.5%    216.3382
+   * Tree (TBR)                              23       1    4.3%      0.1000
+   * Tree (LOCAL)                            20       1    5.0%   3200.0000
+   * Tree (Branch Proportions)               15       7   46.7%     43.4373
+   * Tree (Tree Length)                     144      65   45.1%      0.7655
+
+   *    12000 -- -22811.2978
+
+   Tuning Parameters (cold chain, last 100 cycles)...
+   * MCMC Acceptance Rates:
+   * Parameter                            Tries   Accep    Freq      Tuning
+   * --------------------------------- ------------------------------------
+   * Gamma Shape                             57      20   35.1%      1.4370
+   * Base Frequencies (Beta)                 33      13   39.4%     23.7458
+   * Base Frequencies (Dirichlet)            37      11   29.7%    290.7730
+   * Exchangeability Rates (Beta)            29      11   37.9%      2.5493
+   * Exchangeability Rates (Dirichlet)       31       8   25.8%    224.3338
+   * Tree (TBR)                              27       3   11.1%      0.1000
+   * Tree (LOCAL)                            22       2    9.1%   3200.0000
+   * Tree (Branch Proportions)               15       7   46.7%     43.4080
+   * Tree (Tree Length)                     140      65   46.4%      0.7760
+
+   *    13000 -- -22782.3593
+
+   Tuning Parameters (cold chain, last 100 cycles)...
+   * MCMC Acceptance Rates:
+   * Parameter                            Tries   Accep    Freq      Tuning
+   * --------------------------------- ------------------------------------
+   * Gamma Shape                             42      23   54.8%      1.4005
+   * Base Frequencies (Beta)                 17       8   47.1%     22.5605
+   * Base Frequencies (Dirichlet)            14       8   57.1%    331.5670
+   * Exchangeability Rates (Beta)            48      24   50.0%      2.7062
+   * Exchangeability Rates (Dirichlet)       42      14   33.3%    219.9781
+   * Tree (TBR)                              23       4   17.4%      0.1000
+   * Tree (LOCAL)                            20       2   10.0%   3200.0000
+   * Tree (Branch Proportions)               35      13   37.1%     49.0866
+   * Tree (Tree Length)                     126      50   39.7%      0.7806
+
+   *    14000 -- -22801.4643
+
+   Tuning Parameters (cold chain, last 100 cycles)...
+   * MCMC Acceptance Rates:
+   * Parameter                            Tries   Accep    Freq      Tuning
+   * --------------------------------- ------------------------------------
+   * Gamma Shape                             39      16   41.0%      1.5078
+   * Base Frequencies (Beta)                 27      13   48.1%     22.6499
+   * Base Frequencies (Dirichlet)            25      10   40.0%    304.6680
+   * Exchangeability Rates (Beta)            35      16   45.7%      2.3440
+   * Exchangeability Rates (Dirichlet)       46      14   30.4%    201.7852
+   * Tree (TBR)                              25       2    8.0%      0.1000
+   * Tree (LOCAL)                            16       1    6.2%   3200.0000
+   * Tree (Branch Proportions)               23      14   60.9%     51.3593
+   * Tree (Tree Length)                     129      46   35.7%      0.8219
+
+   *    15000 -- -22790.8774
+
+   Tuning Parameters (cold chain, last 100 cycles)...
+   * MCMC Acceptance Rates:
+   * Parameter                            Tries   Accep    Freq      Tuning
+   * --------------------------------- ------------------------------------
+   * Gamma Shape                             25      11   44.0%      1.3921
+   * Base Frequencies (Beta)                 33      18   54.5%     23.6449
+   * Base Frequencies (Dirichlet)            39       8   20.5%    288.1202
+   * Exchangeability Rates (Beta)            20       9   45.0%      2.1013
+   * Exchangeability Rates (Dirichlet)       25       9   36.0%    197.5214
+   * Tree (TBR)                              18       1    5.6%      0.1000
+   * Tree (LOCAL)                            21       2    9.5%   3200.0000
+   * Tree (Branch Proportions)               27      11   40.7%     51.0722
+   * Tree (Tree Length)                     113      50   44.2%      0.7810
+
+   *    16000 -- -22800.7070
+
+   Tuning Parameters (cold chain, last 100 cycles)...
+   * MCMC Acceptance Rates:
+   * Parameter                            Tries   Accep    Freq      Tuning
+   * --------------------------------- ------------------------------------
+   * Gamma Shape                             49      19   38.8%      1.4159
+   * Base Frequencies (Beta)                 28      10   35.7%     24.8722
+   * Base Frequencies (Dirichlet)            19       5   26.3%    286.7911
+   * Exchangeability Rates (Beta)            14       7   50.0%      2.2072
+   * Exchangeability Rates (Dirichlet)       22       3   13.6%    195.8538
+   * Tree (TBR)                              22       2    9.1%      0.1000
+   * Tree (LOCAL)                            25       3   12.0%   3200.0000
+   * Tree (Branch Proportions)               21       8   38.1%     57.6036
+   * Tree (Tree Length)                     160      73   45.6%      0.7594
+
+   *    17000 -- -22781.4849
+
+   Tuning Parameters (cold chain, last 100 cycles)...
+   * MCMC Acceptance Rates:
+   * Parameter                            Tries   Accep    Freq      Tuning
+   * --------------------------------- ------------------------------------
+   * Gamma Shape                             82      36   43.9%      1.2799
+   * Base Frequencies (Beta)                 22       8   36.4%     24.7694
+   * Base Frequencies (Dirichlet)            21       4   19.0%    281.8955
+   * Exchangeability Rates (Beta)            12       5   41.7%      2.3181
+   * Exchangeability Rates (Dirichlet)       24      10   41.7%    200.6377
+   * Tree (TBR)                              24       1    4.2%      0.1000
+   * Tree (LOCAL)                            20       5   25.0%   3200.0000
+   * Tree (Branch Proportions)               18       5   27.8%     58.7708
+   * Tree (Tree Length)                     154      69   44.8%      0.8055
+
+   *    18000 -- -22801.6044
+
+   Tuning Parameters (cold chain, last 100 cycles)...
+   * MCMC Acceptance Rates:
+   * Parameter                            Tries   Accep    Freq      Tuning
+   * --------------------------------- ------------------------------------
+   * Gamma Shape                             34      14   41.2%      1.3035
+   * Base Frequencies (Beta)                 19       5   26.3%     24.0284
+   * Base Frequencies (Dirichlet)            17       9   52.9%    290.5812
+   * Exchangeability Rates (Beta)            28      15   53.6%      2.4771
+   * Exchangeability Rates (Dirichlet)       32       6   18.8%    193.2618
+   * Tree (TBR)                              20       2   10.0%      0.1000
+   * Tree (LOCAL)                            17       2   11.8%   3200.0000
+   * Tree (Branch Proportions)               45      18   40.0%     59.8276
+   * Tree (Tree Length)                     129      65   50.4%      0.7774
+
+   *    19000 -- -22801.5185
+
+   Tuning Parameters (cold chain, last 100 cycles)...
+   * MCMC Acceptance Rates:
+   * Parameter                            Tries   Accep    Freq      Tuning
+   * --------------------------------- ------------------------------------
+   * Gamma Shape                             46      24   52.2%      1.3686
+   * Base Frequencies (Beta)                 29      11   37.9%     23.0229
+   * Base Frequencies (Dirichlet)            31       9   29.0%    272.0256
+   * Exchangeability Rates (Beta)            28      13   46.4%      2.3935
+   * Exchangeability Rates (Dirichlet)       20       4   20.0%    196.1015
+   * Tree (TBR)                              14       2   14.3%      0.1000
+   * Tree (LOCAL)                            28       1    3.6%   3200.0000
+   * Tree (Branch Proportions)               22      10   45.5%     54.3522
+   * Tree (Tree Length)                     130      56   43.1%      0.8160
+
+   *    20000 -- -22786.8838
+
+   Tuning Parameters (cold chain, last 100 cycles)...
+   * MCMC Acceptance Rates:
+   * Parameter                            Tries   Accep    Freq      Tuning
+   * --------------------------------- ------------------------------------
+   * Gamma Shape                             67      30   44.8%      1.3201
+   * Base Frequencies (Beta)                 35      13   37.1%     23.4294
+   * Base Frequencies (Dirichlet)            11       5   45.5%    281.9298
+   * Exchangeability Rates (Beta)            28       9   32.1%      2.3285
+   * Exchangeability Rates (Dirichlet)       23       9   39.1%    197.3013
+   * Tree (TBR)                              21       1    4.8%      0.1000
+   * Tree (LOCAL)                            22       3   13.6%   3200.0000
+   * Tree (Branch Proportions)               24      12   50.0%     48.6640
+   * Tree (Tree Length)                     104      40   38.5%      0.7828
+
+
+   Markov Chain Monte Carlo Sampling:
+   *   1000 -- -22791.32 -- [0] tt(1) tl(7) rv(8) bf(6) er(5) -- 33m:19s remaining  
+   *   2000 -- -22773.72 -- [0] tt(1) tl(8) rv(9) bf(6) er(5) -- 16m:39s remaining  
+   *   3000 -- -22780.70 -- [0] tt(1) tl(8) rv(11) bf(5) er(5) -- 22m:11s remaining  
+   *   4000 -- -22771.03 -- [0] tt(1) tl(8) rv(8) bf(5) er(6) -- 24m:57s remaining  
+   *   5000 -- -22766.18 -- [0] tt(1) tl(7) rv(7) bf(6) er(5) -- 26m:36s remaining  
+   *   6000 -- -22771.27 -- [0] tt(1) tl(9) rv(8) bf(5) er(6) -- 27m:41s remaining  
+   *   7000 -- -22777.90 -- [0] tt(1) tl(8) rv(6) bf(5) er(5) -- 28m:28s remaining  
+   *   8000 -- -22759.47 -- [0] tt(1) tl(10) rv(9) bf(5) er(6) -- 29m:03s remaining  
+   *   9000 -- -22773.19 -- [0] tt(1) tl(7) rv(9) bf(5) er(5) -- 25m:48s remaining  
+   *  10000 -- -22773.60 -- [0] tt(1) tl(8) rv(5) bf(7) er(5) -- 26m:32s remaining  
+   *  11000 -- -22786.05 -- [0] tt(1) tl(9) rv(10) bf(6) er(5) -- 27m:07s remaining  
+   *  12000 -- -22780.40 -- [0] tt(1) tl(7) rv(7) bf(6) er(7) -- 27m:36s remaining  
+   *  13000 -- -22776.09 -- [0] tt(1) tl(9) rv(8) bf(5) er(5) -- 28m:01s remaining  
+   *  14000 -- -22786.31 -- [0] tt(1) tl(9) rv(6) bf(5) er(5) -- 28m:22s remaining  
+   *  15000 -- -22781.27 -- [0] tt(1) tl(11) rv(6) bf(6) er(5) -- 28m:40s remaining  
+   *  16000 -- -22775.51 -- [0] tt(1) tl(9) rv(7) bf(5) er(5) -- 28m:56s remaining  
+   *  17000 -- -22780.23 -- [0] tt(1) tl(10) rv(9) bf(5) er(6) -- 29m:09s remaining  
+   *  18000 -- -22785.72 -- [0] tt(1) tl(9) rv(6) bf(5) er(5) -- 27m:31s remaining  
+   *  19000 -- -22775.07 -- [0] tt(1) tl(9) rv(9) bf(5) er(6) -- 29m:32s remaining  
+   *  20000 -- -22766.53 -- [0] tt(1) tl(9) rv(9) bf(6) er(5) -- 29m:42s remaining  
+   *  21000 -- -22810.14 -- [0] tt(1) tl(7) rv(7) bf(5) er(5) -- 29m:50s remaining  
+   *  22000 -- -22788.56 -- [0] tt(1) tl(9) rv(11) bf(5) er(5) -- 29m:58s remaining  
+   *  23000 -- -22778.46 -- [0] tt(1) tl(9) rv(8) bf(5) er(5) -- 30m:05s remaining  
+   *  24000 -- -22765.59 -- [0] tt(1) tl(7) rv(10) bf(5) er(5) -- 30m:11s remaining  
+   *  25000 -- -22783.84 -- [0] tt(1) tl(9) rv(6) bf(5) er(5) -- 30m:17s remaining  
+   *  26000 -- -22778.67 -- [0] tt(1) tl(9) rv(6) bf(5) er(5) -- 30m:22s remaining  
+   *  27000 -- -22776.76 -- [0] tt(1) tl(8) rv(9) bf(5) er(4) -- 30m:26s remaining  
+   *  28000 -- -22783.64 -- [0] tt(1) tl(8) rv(11) bf(6) er(5) -- 30m:31s remaining  
+   *  29000 -- -22791.15 -- [0] tt(1) tl(9) rv(10) bf(5) er(5) -- 31m:43s remaining  
+   *  30000 -- -22763.53 -- [0] tt(1) tl(10) rv(6) bf(6) er(5) -- 31m:44s remaining  
+   *  31000 -- -22777.06 -- [0] tt(1) tl(10) rv(9) bf(5) er(5) -- 31m:45s remaining  
+   *  32000 -- -22789.18 -- [0] tt(1) tl(9) rv(6) bf(5) er(5) -- 31m:46s remaining  
+   *  33000 -- -22779.54 -- [0] tt(1) tl(9) rv(6) bf(5) er(5) -- 31m:47s remaining  
+   *  34000 -- -22781.52 -- [0] tt(1) tl(9) rv(10) bf(5) er(5) -- 31m:48s remaining  
+   *  35000 -- -22782.84 -- [0] tt(1) tl(8) rv(6) bf(5) er(5) -- 31m:48s remaining  
+   *  36000 -- -22782.44 -- [0] tt(1) tl(9) rv(9) bf(5) er(4) -- 31m:49s remaining  
+   *  37000 -- -22769.42 -- [0] tt(1) tl(10) rv(7) bf(5) er(5) -- 31m:49s remaining  
+   *  38000 -- -22780.74 -- [0] tt(1) tl(8) rv(7) bf(5) er(6) -- 30m:58s remaining  
+   *  39000 -- -22774.57 -- [0] tt(1) tl(8) rv(6) bf(5) er(5) -- 31m:00s remaining  
+   *  40000 -- -22785.89 -- [0] tt(1) tl(9) rv(6) bf(5) er(5) -- 31m:02s remaining  
+   *  41000 -- -22772.95 -- [0] tt(1) tl(8) rv(5) bf(6) er(6) -- 31m:03s remaining  
+   *  42000 -- -22764.84 -- [0] tt(1) tl(10) rv(10) bf(5) er(5) -- 31m:04s remaining  
+   *  43000 -- -22800.92 -- [0] tt(1) tl(8) rv(9) bf(6) er(5) -- 31m:05s remaining  
+   *  44000 -- -22770.69 -- [0] tt(1) tl(9) rv(7) bf(6) er(8) -- 31m:07s remaining  
+   *  45000 -- -22772.14 -- [0] tt(1) tl(8) rv(7) bf(5) er(5) -- 31m:08s remaining  
+   *  46000 -- -22783.20 -- [0] tt(1) tl(10) rv(8) bf(5) er(5) -- 31m:09s remaining  
+   *  47000 -- -22778.64 -- [0] tt(1) tl(11) rv(8) bf(5) er(5) -- 31m:09s remaining  
+   *  48000 -- -22773.19 -- [0] tt(1) tl(9) rv(10) bf(5) er(6) -- 31m:10s remaining  
+   *  49000 -- -22769.40 -- [0] tt(1) tl(9) rv(9) bf(5) er(6) -- 31m:11s remaining  
+   *  50000 -- -22769.59 -- [0] tt(1) tl(8) rv(10) bf(6) er(6) -- 31m:12s remaining  
+   *  51000 -- -22772.78 -- [0] tt(1) tl(9) rv(7) bf(5) er(5) -- 31m:12s remaining  
+   *  52000 -- -22794.90 -- [0] tt(1) tl(9) rv(9) bf(5) er(5) -- 31m:13s remaining  
+   *  53000 -- -22776.34 -- [0] tt(1) tl(6) rv(11) bf(5) er(5) -- 31m:13s remaining  
+   *  54000 -- -22786.72 -- [0] tt(1) tl(10) rv(10) bf(5) er(4) -- 31m:13s remaining  
+   *  55000 -- -22780.17 -- [0] tt(1) tl(10) rv(8) bf(6) er(4) -- 31m:14s remaining  
+   *  56000 -- -22785.14 -- [0] tt(1) tl(8) rv(8) bf(5) er(5) -- 31m:49s remaining  
+   *  57000 -- -22759.63 -- [0] tt(1) tl(10) rv(8) bf(6) er(5) -- 32m:23s remaining  
+   *  58000 -- -22779.28 -- [0] tt(1) tl(9) rv(6) bf(5) er(5) -- 32m:22s remaining  
+   *  59000 -- -22775.90 -- [0] tt(1) tl(8) rv(10) bf(5) er(5) -- 32m:21s remaining  
+   *  60000 -- -22773.07 -- [0] tt(1) tl(9) rv(9) bf(5) er(5) -- 32m:20s remaining  
+   *  61000 -- -22760.67 -- [0] tt(1) tl(9) rv(6) bf(7) er(5) -- 32m:19s remaining  
+   *  62000 -- -22765.45 -- [0] tt(1) tl(9) rv(8) bf(6) er(5) -- 32m:49s remaining  
+   *  63000 -- -22768.90 -- [0] tt(1) tl(8) rv(7) bf(6) er(5) -- 32m:47s remaining  
+   *  64000 -- -22766.74 -- [0] tt(1) tl(10) rv(7) bf(6) er(5) -- 32m:46s remaining  
+   *  65000 -- -22784.55 -- [0] tt(1) tl(7) rv(11) bf(5) er(5) -- 32m:44s remaining  
+   *  66000 -- -22801.12 -- [0] tt(1) tl(8) rv(8) bf(5) er(4) -- 33m:12s remaining  
+   *  67000 -- -22778.39 -- [0] tt(1) tl(9) rv(7) bf(5) er(5) -- 33m:39s remaining  
+   *  68000 -- -22786.28 -- [0] tt(1) tl(8) rv(7) bf(5) er(5) -- 34m:05s remaining  
+   *  69000 -- -22766.69 -- [0] tt(1) tl(10) rv(9) bf(5) er(6) -- 34m:30s remaining  
+   *  70000 -- -22761.75 -- [0] tt(1) tl(5) rv(9) bf(5) er(5) -- 35m:23s remaining  
+   *  71000 -- -22777.66 -- [0] tt(1) tl(9) rv(6) bf(6) er(5) -- 35m:46s remaining  
+   *  72000 -- -22771.57 -- [0] tt(1) tl(11) rv(10) bf(5) er(5) -- 36m:09s remaining  
+   *  73000 -- -22783.63 -- [0] tt(1) tl(8) rv(8) bf(5) er(5) -- 36m:57s remaining  
+   *  74000 -- -22779.20 -- [0] tt(1) tl(9) rv(9) bf(6) er(5) -- 37m:18s remaining  
+   *  75000 -- -22779.98 -- [0] tt(1) tl(10) rv(6) bf(5) er(5) -- 38m:04s remaining  
+   *  76000 -- -22790.68 -- [0] tt(1) tl(8) rv(7) bf(6) er(5) -- 38m:23s remaining  
+   *  77000 -- -22764.04 -- [0] tt(1) tl(8) rv(10) bf(6) er(6) -- 38m:42s remaining  
+   *  78000 -- -22779.37 -- [0] tt(1) tl(7) rv(8) bf(5) er(7) -- 39m:25s remaining  
+   *  79000 -- -22775.43 -- [0] tt(1) tl(7) rv(8) bf(5) er(6) -- 39m:43s remaining  
+   *  80000 -- -22777.56 -- [0] tt(1) tl(9) rv(8) bf(6) er(7) -- 40m:24s remaining  
+   *  81000 -- -22803.72 -- [0] tt(1) tl(10) rv(6) bf(5) er(5) -- 40m:40s remaining  
+   *  82000 -- -22791.63 -- [0] tt(1) tl(6) rv(8) bf(6) er(6) -- 41m:19s remaining  
+   *  83000 -- -22793.14 -- [0] tt(1) tl(10) rv(10) bf(6) er(5) -- 41m:34s remaining  
+   *  84000 -- -22766.35 -- [0] tt(1) tl(8) rv(7) bf(5) er(6) -- 41m:26s remaining  
+   *  85000 -- -22784.68 -- [0] tt(1) tl(8) rv(8) bf(6) er(5) -- 41m:40s remaining  
+   *  86000 -- -22778.49 -- [0] tt(1) tl(9) rv(9) bf(6) er(5) -- 41m:32s remaining  
+   *  87000 -- -22780.40 -- [0] tt(1) tl(6) rv(8) bf(6) er(5) -- 41m:46s remaining  
+   *  88000 -- -22792.34 -- [0] tt(1) tl(9) rv(8) bf(5) er(4) -- 41m:38s remaining  
+   *  89000 -- -22771.85 -- [0] tt(1) tl(9) rv(7) bf(5) er(6) -- 41m:30s remaining  
+   *  90000 -- -22784.77 -- [0] tt(1) tl(10) rv(10) bf(5) er(5) -- 41m:44s remaining  
+   *  91000 -- -22783.39 -- [0] tt(1) tl(9) rv(7) bf(5) er(6) -- 41m:36s remaining  
+   *  92000 -- -22772.35 -- [0] tt(1) tl(7) rv(10) bf(5) er(5) -- 41m:49s remaining  
+   *  93000 -- -22775.57 -- [0] tt(1) tl(6) rv(8) bf(5) er(6) -- 41m:41s remaining  
+   *  94000 -- -22790.20 -- [0] tt(1) tl(10) rv(8) bf(7) er(5) -- 41m:34s remaining  
+   *  95000 -- -22785.85 -- [0] tt(1) tl(6) rv(6) bf(5) er(5) -- 41m:26s remaining  
+   *  96000 -- -22785.01 -- [0] tt(1) tl(9) rv(10) bf(6) er(5) -- 41m:39s remaining  
+   *  97000 -- -22776.84 -- [0] tt(1) tl(8) rv(10) bf(6) er(6) -- 41m:31s remaining  
+   *  98000 -- -22768.82 -- [0] tt(1) tl(10) rv(9) bf(6) er(5) -- 41m:24s remaining  
+   *  99000 -- -22780.41 -- [0] tt(1) tl(9) rv(11) bf(5) er(4) -- 41m:36s remaining  
+   * 100000 -- -22777.15 -- [0] tt(1) tl(9) rv(5) bf(6) er(4) -- 41m:29s remaining  
+   * 101000 -- -22762.37 -- [0] tt(1) tl(9) rv(6) bf(7) er(5) -- 41m:21s remaining  
+   * 102000 -- -22800.26 -- [0] tt(1) tl(11) rv(10) bf(5) er(4) -- 41m:33s remaining  
+   * 103000 -- -22775.86 -- [0] tt(1) tl(10) rv(7) bf(6) er(5) -- 41m:26s remaining  
+   * 104000 -- -22786.82 -- [0] tt(1) tl(8) rv(10) bf(6) er(5) -- 41m:37s remaining  
+   * 105000 -- -22790.27 -- [0] tt(1) tl(9) rv(5) bf(5) er(5) -- 41m:30s remaining  
+   * 106000 -- -22788.08 -- [0] tt(1) tl(9) rv(6) bf(5) er(6) -- 41m:23s remaining  
+   * 107000 -- -22793.87 -- [0] tt(1) tl(9) rv(6) bf(7) er(5) -- 41m:34s remaining  
+   * 108000 -- -22784.83 -- [0] tt(1) tl(8) rv(9) bf(6) er(6) -- 41m:27s remaining  
+   * 109000 -- -22781.96 -- [0] tt(1) tl(9) rv(8) bf(6) er(5) -- 41m:20s remaining  
+   * 110000 -- -22779.39 -- [0] tt(1) tl(8) rv(10) bf(5) er(5) -- 41m:14s remaining  
+   * 111000 -- -22775.78 -- [0] tt(1) tl(8) rv(6) bf(6) er(5) -- 41m:07s remaining  
+   * 112000 -- -22790.49 -- [0] tt(1) tl(8) rv(6) bf(5) er(6) -- 41m:18s remaining  
+   * 113000 -- -22766.18 -- [0] tt(1) tl(9) rv(6) bf(6) er(5) -- 41m:11s remaining  
+   * 114000 -- -22770.14 -- [0] tt(1) tl(9) rv(7) bf(5) er(5) -- 41m:21s remaining  
+   * 115000 -- -22788.33 -- [0] tt(1) tl(6) rv(7) bf(6) er(5) -- 41m:15s remaining  
+   * 116000 -- -22768.66 -- [0] tt(1) tl(9) rv(7) bf(6) er(5) -- 41m:08s remaining  
+   * 117000 -- -22795.47 -- [0] tt(1) tl(10) rv(10) bf(5) er(4) -- 41m:02s remaining  
+   * 118000 -- -22775.35 -- [0] tt(1) tl(9) rv(9) bf(5) er(5) -- 41m:12s remaining  
+   * 119000 -- -22763.41 -- [0] tt(1) tl(9) rv(6) bf(6) er(6) -- 41m:05s remaining  
+   * 120000 -- -22763.48 -- [0] tt(1) tl(9) rv(8) bf(6) er(6) -- 40m:59s remaining  
+   * 121000 -- -22776.87 -- [0] tt(1) tl(9) rv(7) bf(5) er(5) -- 41m:09s remaining  
+   * 122000 -- -22787.13 -- [0] tt(1) tl(5) rv(9) bf(6) er(5) -- 41m:02s remaining  
+   * 123000 -- -22783.53 -- [0] tt(1) tl(9) rv(9) bf(6) er(6) -- 40m:56s remaining  
+   * 124000 -- -22772.23 -- [0] tt(1) tl(9) rv(8) bf(7) er(5) -- 41m:06s remaining  
+   * 125000 -- -22764.28 -- [0] tt(1) tl(8) rv(6) bf(5) er(6) -- 41m:00s remaining  
+   * 126000 -- -22794.74 -- [0] tt(1) tl(9) rv(7) bf(5) er(5) -- 41m:08s remaining  
+   * 127000 -- -22765.67 -- [0] tt(1) tl(7) rv(8) bf(6) er(7) -- 41m:02s remaining  
+   * 128000 -- -22766.73 -- [0] tt(1) tl(8) rv(6) bf(6) er(5) -- 41m:11s remaining  
+   * 129000 -- -22764.20 -- [0] tt(1) tl(9) rv(10) bf(6) er(6) -- 41m:05s remaining  
+   * 130000 -- -22768.32 -- [0] tt(1) tl(8) rv(9) bf(7) er(5) -- 40m:59s remaining  
+   * 131000 -- -22796.16 -- [0] tt(1) tl(7) rv(6) bf(5) er(5) -- 40m:53s remaining  
+   * 132000 -- -22791.65 -- [0] tt(1) tl(8) rv(7) bf(5) er(4) -- 41m:02s remaining  
+   * 133000 -- -22775.90 -- [0] tt(1) tl(9) rv(8) bf(5) er(5) -- 41m:24s remaining  
+   * 134000 -- -22777.13 -- [0] tt(1) tl(9) rv(8) bf(5) er(5) -- 41m:32s remaining  
