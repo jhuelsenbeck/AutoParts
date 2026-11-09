@@ -481,8 +481,9 @@ void Tree::deleteAllNodes(void) {
 
 Branch* Tree::findBranch(Node* e1Idx, Node* e2Idx) {
 
-    branchKey.setEnds(e1Idx, e2Idx);
-    std::map<NodePair, Branch*, CompNodePair>::iterator it = branches.find(branchKey);
+    // a local key (not the branchKey member) so that threads can look up branches at once
+    NodePair key(e1Idx, e2Idx);
+    std::map<NodePair, Branch*, CompNodePair>::iterator it = branches.find(key);
     if (it != branches.end())
         return it->second;
     return NULL;

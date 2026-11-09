@@ -37,6 +37,9 @@ Chunk::Chunk(const Chunk& c) {
     condLikes = new ConditionalLikelihoods(alignment, numGammaCategories);
     transProbs = new TransitionProbabilities(model, this, 2*alignment->getNumTaxa()-1, numGammaCategories);
     initializeTipStates();
+    ownCondLikePtrs.resize(condLikes->getNumNodes());
+    for (int i=0; i<condLikes->getNumNodes(); i++)
+        ownCondLikePtrs[i] = condLikes->getConditionalLikelihoods(0, i);
 }
 
 Chunk::Chunk(int myId, Alignment* a, Model* m, int nc) {
@@ -51,6 +54,9 @@ Chunk::Chunk(int myId, Alignment* a, Model* m, int nc) {
     condLikes = new ConditionalLikelihoods(alignment, numGammaCategories);
     transProbs = new TransitionProbabilities(model, this, 2*alignment->getNumTaxa()-1, numGammaCategories);
     initializeTipStates();
+    ownCondLikePtrs.resize(condLikes->getNumNodes());
+    for (int i=0; i<condLikes->getNumNodes(); i++)
+        ownCondLikePtrs[i] = condLikes->getConditionalLikelihoods(0, i);
 }
 
 Chunk::~Chunk(void) {
@@ -194,20 +200,77 @@ double Chunk::lnLikelihood(void) {
     return 0.0;
 #   endif
 
+    Tree* t = model->getTree(id);
+    std::vector<std::vector<NucleotideSquareMatrix_t> >& tp = transProbs->getTransitionProbabilities();
+    std::vector<double>& f = model->getBaseFrequencies(id);
     bool tooSmall = false;
-    double lnL = computeLnLikelihood(false, tooSmall);
+    double lnL = computeLnLikelihood(false, tooSmall, t, tp, ownCondLikePtrs.data(), f, scaleCounts);
     if (tooSmall == true)
-        lnL = computeLnLikelihood(true, tooSmall);
+        lnL = computeLnLikelihood(true, tooSmall, t, tp, ownCondLikePtrs.data(), f, scaleCounts);
     return lnL;
 }
 
-double Chunk::computeLnLikelihood(bool rescale, bool& tooSmall) {
+// The current parameter values for this subset (those of the tables it is seated at).
+SubsetParameters Chunk::currentParameters(void) {
+
+    SubsetParameters p;
+    p.tree                 = model->getTree(id);
+    p.treeLength           = model->getTreeLength(id);
+    p.baseFrequencies      = &model->getBaseFrequencies(id);
+    p.exchangeabilityRates = &model->getExchangeabilityRates(id);
+    p.gammaCategoryRates   = &model->getGammaCategoryRates(id);
+    return p;
+}
+
+// The likelihood of this subset under the parameter values p, calculated in the
+// workspace ws; this subset's own buffers are only read. If newEigens is false, the
+// subset's current eigensystem is used (p must then have its current base frequencies
+// and exchangeability rates). Different threads can call this at once for the same
+// subset, each with its own workspace.
+double Chunk::lnLikelihood(const SubsetParameters& p, bool newEigens, LikelihoodWorkspace& ws) {
+
+#   if defined(NO_DATA)
+    return 0.0;
+#   endif
+
+    EigenSystem* e = &transProbs->getEigens();
+    if (newEigens == true)
+        {
+        ws.eigens.updateReversibleRateMatrix(*p.exchangeabilityRates, *p.baseFrequencies);
+        e = &ws.eigens;
+        }
+        
+    int numNodes = condLikes->getNumNodes();
+    int numTaxa = alignment->getNumTaxa();
+    if (ws.transitionProbabilities.size() != numGammaCategories || ws.transitionProbabilities[0].size() < numNodes)
+        {
+        ws.transitionProbabilities.resize(numGammaCategories);
+        for (int k=0; k<numGammaCategories; k++)
+            ws.transitionProbabilities[k].resize(numNodes);
+        }
+    TransitionProbabilities::calculate(*e, p.tree, p.treeLength, *p.gammaCategoryRates, ws.transitionProbabilities);
+    
+    // tips use this subset's own (fixed) conditional likelihoods; internal nodes use the workspace
+    size_t nodeSize = (size_t)numSites * 4 * numGammaCategories;
+    if (ws.condLikes.size() < numNodes * nodeSize)
+        ws.condLikes.resize(numNodes * nodeSize);
+    ws.condLikePtrs.resize(numNodes);
+    for (int i=0; i<numNodes; i++)
+        ws.condLikePtrs[i] = (i < numTaxa) ? ownCondLikePtrs[i] : ws.condLikes.data() + i * nodeSize;
+
+    bool tooSmall = false;
+    double lnL = computeLnLikelihood(false, tooSmall, p.tree, ws.transitionProbabilities, ws.condLikePtrs.data(), *p.baseFrequencies, ws.scaleCounts);
+    if (tooSmall == true)
+        lnL = computeLnLikelihood(true, tooSmall, p.tree, ws.transitionProbabilities, ws.condLikePtrs.data(), *p.baseFrequencies, ws.scaleCounts);
+    return lnL;
+}
+
+double Chunk::computeLnLikelihood(bool rescale, bool& tooSmall, Tree* t,
+                                  std::vector<std::vector<NucleotideSquareMatrix_t> >& tp,
+                                  double* const* clPtrs, const std::vector<double>& f,
+                                  std::vector<int>& scaleCountsForSites) {
 
     tooSmall = false;
-
-    // get the tree and a vector containing all of the transition probabilities
-    Tree* t = model->getTree(id);
-    std::vector<std::vector<NucleotideSquareMatrix_t> >& tp = transProbs->getTransitionProbabilities();
     std::vector<Node*>& dpSeq = t->getDownPassSequence();
     if (t->getRoot()->getDescendants().size() != 3)
         Msg::error("Expecting three descendants of the root");
@@ -216,7 +279,7 @@ double Chunk::computeLnLikelihood(bool rescale, bool& tooSmall) {
     
     const double* T[MAX_GAMMA_CATEGORIES];
     if (rescale == true)
-        scaleCounts.assign(numSites, 0);
+        scaleCountsForSites.assign(numSites, 0);
     for (int n=0; n<dpSeq.size(); n++)
         {
         Node* p = dpSeq[n];
@@ -228,11 +291,11 @@ double Chunk::computeLnLikelihood(bool rescale, bool& tooSmall) {
             if (desc.size() == 3 && p != t->getRoot())
                 Msg::error("Only expecting a three-way split at the root of the tree");
                 
-            double* clP = condLikes->getConditionalLikelihoods(0, p->getIndex());
+            double* clP = clPtrs[p->getIndex()];
             for (int d=0; d<desc.size(); d++)
                 {
                 int idx = desc[d]->getIndex();
-                const double* clD = condLikes->getConditionalLikelihoods(0, idx);
+                const double* clD = clPtrs[idx];
                 for (int k=0; k<numGammaCategories; k++)
                     T[k] = tp[k][idx].data();
                 if (desc[d]->getIsLeaf() == true)
@@ -252,15 +315,14 @@ double Chunk::computeLnLikelihood(bool rescale, bool& tooSmall) {
                     }
                 }
             if (rescale == true)
-                rescaleNode(clP, scaleCounts.data(), numSites, numGammaCategories);
+                rescaleNode(clP, scaleCountsForSites.data(), numSites, numGammaCategories);
             }
         }
         
     // calculate average probability at root
-    std::vector<double>& f = model->getBaseFrequencies(id);
     double lnL = 0.0;
     double catProb = 1.0 / numGammaCategories;
-    double* clRoot = condLikes->getConditionalLikelihoods(0, t->getRoot()->getIndex());
+    const double* clRoot = clPtrs[t->getRoot()->getIndex()];
     for (int c=0; c<numSites; c++)
         {
         double prob = 0.0;
@@ -277,8 +339,8 @@ double Chunk::computeLnLikelihood(bool rescale, bool& tooSmall) {
             }
         int numSitesOfPattern = alignment->getNumSitesOfPattern(c);
         double lnProb = log(prob);
-        if (rescale == true && scaleCounts[c] > 0)
-            lnProb -= scaleCounts[c] * SCALE_EXPONENT * std::log(2.0);
+        if (rescale == true && scaleCountsForSites[c] > 0)
+            lnProb -= scaleCountsForSites[c] * SCALE_EXPONENT * std::log(2.0);
         lnL += numSitesOfPattern * lnProb;
         }
         

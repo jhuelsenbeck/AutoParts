@@ -41,8 +41,11 @@ target_include_directories(autoparts PRIVATE
     ${PROJECT_SOURCE_DIR}/src
 )
 
+find_package(Threads REQUIRED)
+
 target_link_libraries(autoparts PRIVATE
     Eigen3::Eigen
+    Threads::Threads
 )
 
 # Tune for the build machine: -mcpu=native on ARM (including Apple silicon),

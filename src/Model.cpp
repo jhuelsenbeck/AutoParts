@@ -126,6 +126,8 @@ Model::~Model(void) {
 
     for (int i=0; i<chunks.size(); i++)
         delete chunks[i];
+    for (LikelihoodWorkspace* ws : workspaces)
+        delete ws;
         
     delete treeRestaurant;
     delete treeLengthRestaurant;
@@ -507,6 +509,14 @@ void Model::initializeProposalProbabilities(void) {
 void Model::initializeStateSets(UserSettings* s) {
 
 	stateSets = new StateSets(alignment, s);
+}
+
+// Makes certain there is a likelihood workspace for each thread. Not thread safe: call it
+// before starting a parallel loop.
+void Model::prepareWorkspaces(int numThreads) {
+
+    while ((int)workspaces.size() < numThreads)
+        workspaces.push_back(new LikelihoodWorkspace);
 }
 
 // Returns the cached log-likelihood of each data subset, computing it on the first call.

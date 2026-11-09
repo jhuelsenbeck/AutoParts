@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include "Msg.hpp"
+#include "ThreadPool.hpp"
 #include "UserSettings.hpp"
 
 
@@ -43,6 +44,7 @@ UserSettings::UserSettings(int argc,  char* argv[]) {
     numSims                         = 50;
     numChains                       = 1;
     seed                            = (uint32_t)time(NULL);
+    numThreads                      = ThreadPool::defaultNumThreads();
     temperature                     = 0.2;
     numMcmcCycles                   = 400000;
     burnIn                          = 0;
@@ -91,6 +93,8 @@ UserSettings::UserSettings(int argc,  char* argv[]) {
                 numSims = stoi(settings[i]);
             else if (currentArg == "-tu")
                 tuningFrequency = stoi(settings[i]);
+            else if (currentArg == "-threads")
+                numThreads = stoi(settings[i]);
             else if (currentArg == "-seed")
                 seed = (uint32_t)stoul(settings[i]);
             else if (currentArg == "-nc")
@@ -190,6 +194,7 @@ void UserSettings::print(void) {
     
     std::cout << "   * Number of MCMC chains                                 = " << numChains << std::endl;
     std::cout << "   * Random number seed                                    = " << seed << std::endl;
+    std::cout << "   * Number of threads                                     = " << numThreads << std::endl;
     std::cout << "   * MC^3 temperature                                      = " << temperature << std::endl;
     std::cout << "   * Number of MCMC cycles                                 = " << numMcmcCycles << std::endl;
     std::cout << "   * Sample Frequency                                      = " << sampleFrequency << std::endl;
@@ -215,6 +220,7 @@ void UserSettings::usage(void) {
     std::cout << "   * -t               : Tree file name (for constraining the analysis to a fixed tree)" << std::endl;
     std::cout << "   * -o               : Output file name" << std::endl;
     std::cout << "   * -seed            : Random number seed (default: from the clock; printed at start-up)" << std::endl;
+    std::cout << "   * -threads         : Number of threads (default: the number of performance cores)" << std::endl;
     std::cout << std::endl;
     
     std::cout << "   Program options for model parameters:" << std::endl;

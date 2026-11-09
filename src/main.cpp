@@ -7,6 +7,7 @@
 #include "Mcmc.hpp"
 #include "Model.hpp"
 #include "RandomVariable.hpp"
+#include "ThreadPool.hpp"
 #include "Msg.hpp"
 #include "ParameterSummary.hpp"
 #include "ParameterSummaryPartition.hpp"
@@ -39,6 +40,7 @@ int main(int argc, char* argv[]) {
     // get the user settings
     UserSettings settings(argc, argv);
     RandomVariable::randomVariableInstance().setSeed(settings.getSeed());
+    ThreadPool::threadPool().setNumThreads(settings.getNumThreads());
     settings.print();
 
     auto& updateInfo = UpdateInfo::updateInfo();

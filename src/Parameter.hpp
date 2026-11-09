@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 class Model;
+struct SubsetParameters;
 class Table;
 class UserSettings;
 
@@ -30,6 +31,7 @@ class Parameter {
         virtual void                reject(void) = 0;
         virtual void                setName(std::string s) { name = s; }
         virtual void                setProposalProbability(double x) { proposalProbability = x; }
+        virtual void                setSubsetParameters(SubsetParameters& p) = 0;   // supply this parameter's value to p
         virtual void                setTable(Table* t) { myTable = t; }
         virtual void                setModel(Model* m) {modelPtr = m;}
         virtual void                setUpdateModifiesEigens(bool tf) { updateModifiesEigens = tf; }

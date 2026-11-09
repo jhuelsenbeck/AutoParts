@@ -6,6 +6,7 @@
 #include <vector>
 class Alignment;
 class Chunk;
+struct LikelihoodWorkspace;
 class Parameter;
 class Restaurant;
 class StateSets;
@@ -52,6 +53,8 @@ class Model {
         std::vector<std::string>        getTaxonNames(void);
         void                            getParameterValues(std::string& v);
         std::vector<double>&            getChunkLnLs(void);
+        LikelihoodWorkspace&            getWorkspace(int threadIdx) { return *workspaces[threadIdx]; }
+        void                            prepareWorkspaces(int numThreads);
         double                          lnLikelihood(void);
         double                          lnLikelihood(int idx);
         double                          lnProbability(void);
@@ -77,6 +80,7 @@ class Model {
         std::vector<std::pair<Restaurant*,double> > proposalProbabilities;   // in a fixed order
         std::vector<double>             chunkLnL;                 // cached log-likelihood of each data subset
         bool                            chunkLnLValid = false;    // filled on first use by getChunkLnLs()
+        std::vector<LikelihoodWorkspace*> workspaces;             // one per thread, for likelihoods under other parameter values
 };
 
 #endif

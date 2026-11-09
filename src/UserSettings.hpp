@@ -32,6 +32,7 @@ class UserSettings {
         int             getTuningFrequency(void) { return tuningFrequency; }
         int             getNumChains(void) { return numChains; }
         uint32_t        getSeed(void) { return seed; }
+        int             getNumThreads(void) { return numThreads; }
         int             getNumSims(void) { return numSims; }
         std::string     getSimFile(void) { return simFile; }
         double          getTemperature(void) { return temperature; }
@@ -53,6 +54,7 @@ class UserSettings {
         
     private:
         uint32_t        seed;
+        int             numThreads;
         bool            yesNo(std::string str);
         std::string     executablePath;
         std::string     inputFile;

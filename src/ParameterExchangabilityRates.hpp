@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "Parameter.hpp"
+#include "SubsetParameters.hpp"
 class Model;
 class UserSettings;
 
@@ -23,6 +24,7 @@ class ParameterExchangabilityRates : public Parameter {
         void                    print(void);
         void                    reject(void);
         std::string             type(void);
+        void                    setSubsetParameters(SubsetParameters& p) { p.exchangeabilityRates = &rates[0]; }
         double                  update(void);
         std::vector<double>&    getRates(void) { return rates[0]; }
 

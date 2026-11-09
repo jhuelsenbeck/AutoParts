@@ -2,6 +2,7 @@
 #define ParameterTree_hpp
 
 #include "Parameter.hpp"
+#include "SubsetParameters.hpp"
 #include "Tree.hpp"
 class Model;
 class UserSettings;
@@ -24,6 +25,7 @@ class ParameterTree : public Parameter {
         void                    print(void);
         void                    reject(void);
         std::string             type(void);
+        void                    setSubsetParameters(SubsetParameters& p) { p.tree = trees[0]; }
         double                  update(void);
         void                    setModel(Model* m){trees[0]->setModel(m); trees[1]->setModel(m);}
 

@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "Parameter.hpp"
+#include "SubsetParameters.hpp"
 class Model;
 class UserSettings;
 
@@ -24,6 +25,7 @@ class ParameterGammaShape : public Parameter {
         void                    print(void);
         void                    reject(void);
         std::string             type(void);
+        void                    setSubsetParameters(SubsetParameters& p) { p.gammaCategoryRates = &gammaRates[0]; }
         double                  update(void);
 
     private:

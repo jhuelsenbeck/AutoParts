@@ -12,6 +12,7 @@ class ConditionalLikelihoods {
                                     ConditionalLikelihoods(Alignment* aln, int nc);
                                    ~ConditionalLikelihoods(void);
         double*                     getConditionalLikelihoods(int space, int nodeIdx) { return cls[space][nodeIdx]; }
+        int                         getNumNodes(void) { return numNodes; }
         void                        print(void);
         
     private:

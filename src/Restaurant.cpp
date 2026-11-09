@@ -15,6 +15,7 @@
 #include "Restaurant.hpp"
 #include "Table.hpp"
 #include "TableFactory.hpp"
+#include "ThreadPool.hpp"
 #include "UpdateInfo.hpp"
 #include "UserSettings.hpp"
 
@@ -409,6 +410,12 @@ double Restaurant::update(double power) {
     // up to date below, so it does not need to be recomputed at the start of each update
     std::vector<double>& curLnL = modelPtr->getChunkLnLs();
     std::vector<double> newLnL(numPatrons);
+    
+    // Likelihoods are calculated in parallel. Random numbers are drawn, and results are
+    // combined, only outside of the parallel loops and in a fixed order, so a run gives
+    // the same results whatever the number of threads.
+    ThreadPool& pool = ThreadPool::threadPool();
+    modelPtr->prepareWorkspaces(pool.getNumThreads());
         
     // 1. update the parameters on each table
     for (Table* tab : tables)
@@ -419,23 +426,25 @@ double Restaurant::update(double power) {
         double lnProposalRatio = parm->update();
         lnPriorRatio += parm->lnProbability();
         
-        // calculate likelihood
+        // calculate likelihood (each patron has its own buffers, so the patrons are done in parallel)
         std::set<int>& tablePatrons = tab->getPatrons();
-        double lnLikelihoodRatio = 0.0;
-        for (int i : tablePatrons)
-            {
+        std::vector<int> patronList(tablePatrons.begin(), tablePatrons.end());
+        bool modifiesEigens = parm->getUpdateModifiesEigens();
+        pool.parallelFor((int)patronList.size(), [&](int j, int) {
+            int i = patronList[j];
             Chunk* chunk = modelPtr->getChunk(i);
-            if (parm->getUpdateModifiesEigens() == true)
+            if (modifiesEigens == true)
                 {
                 chunk->flipActiveEigens();
                 chunk->updateRateMatrix();
                 }
             chunk->flipActiveTransitionProbabilities();
             chunk->updateTransitionProbabilities();
-
-            newLnL[i] = modelPtr->lnLikelihood(i);
+            newLnL[i] = chunk->lnLikelihood();
+            });
+        double lnLikelihoodRatio = 0.0;
+        for (int i : patronList)
             lnLikelihoodRatio += (newLnL[i] - curLnL[i]);
-            }
             
         // accept/reject
         double lnR = (lnLikelihoodRatio * power) + lnPriorRatio + lnProposalRatio; // only the likelihood is heated
@@ -474,8 +483,10 @@ double Restaurant::update(double power) {
         int numAuxliaryTables = 10;
         for (int n=0; n<numPatrons; n++)
             {
-            // get the chunk for the patron
+            // get the chunk for the patron, and its current parameter values (which must be
+            // read before the patron leaves its table)
             Chunk* chunk = modelPtr->getChunk(n);
+            SubsetParameters patronParameters = chunk->currentParameters();
             
             // remove the patron from its current table
             Table* tab = findTableWithPatron(n);
@@ -498,26 +509,32 @@ double Restaurant::update(double power) {
             for (int i=0; i<numFreshTables; i++)
                 auxiliaryTables.insert( addTable() );
                             
-            // calculate the likelihood when the patron is seated at each of the tables (including the auxiliary tables)
+            // calculate the likelihood when the patron is seated at each of the tables
+            // (including the auxiliary tables), in parallel, each thread in its own workspace
+            std::vector<Table*> candidates(tables.begin(), tables.end());
+            std::vector<double> candidateLnL(candidates.size());
+            bool newEigens = parameter->getUpdateModifiesEigens();
+            pool.parallelFor((int)candidates.size(), [&](int j, int w) {
+                SubsetParameters p = patronParameters;
+                candidates[j]->getParameter()->setSubsetParameters(p);
+                candidateLnL[j] = chunk->lnLikelihood(p, newEigens, modelPtr->getWorkspace(w));
+                });
+
             std::map<Table*,double,TableLess> tableLikes;
             std::map<Table*,double,TableLess> tableLnL;     // unheated log-likelihood of the patron at each table
-            for (Table* t : tables)
+            for (int j=0; j<candidates.size(); j++)
                 {
-                t->addPatron(n);
-                if (t->getParameter()->getUpdateModifiesEigens() == true)
-                    chunk->updateRateMatrix();
-                chunk->updateTransitionProbabilities();
-                double rawLnL = chunk->lnLikelihood();
+                Table* t = candidates[j];
+                double rawLnL = candidateLnL[j];
                 double lnL = rawLnL * power;
                 TableSet::iterator it = auxiliaryTables.find(t);
                 double lnP = 0.0;
                 if (it == auxiliaryTables.end())
-                    lnP = log( (double)(t->getNumPatrons() - 1) ); // subtract the patron that was added for calculation purposes
+                    lnP = log( (double)t->getNumPatrons() );  // the patron is not seated, so this is n_{-i,c}
                 else
                     lnP = log(alpha/numAuxliaryTables);
                 tableLikes.insert( std::make_pair(t, lnL+lnP) );
                 tableLnL.insert( std::make_pair(t, rawLnL) );
-                t->removePatron(n);
                 }
 
             // choose a table in proportion to the likelihood to reseat
