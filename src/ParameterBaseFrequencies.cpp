@@ -106,11 +106,9 @@ double ParameterBaseFrequencies::update(void) {
             }
             
         std::vector<double> newFreqs(4);
-        bool err = false;
-        do
-            {
-            err = Probability::Dirichlet::rv(&rng, alphaForward, newFreqs);
-            } while (anyLessThanMin(newFreqs, MIN_FREQ) == true || err == true);
+        bool err = Probability::Dirichlet::rv(&rng, alphaForward, newFreqs);
+        if (err == true || anyLessThanMin(newFreqs, MIN_FREQ) == true)
+            return rejectProposal();     // outside the support (see Parameter.hpp)
         
         std::vector<double> alphaReverse(4);
         for (int i=0; i<4; i++)
@@ -134,8 +132,7 @@ double ParameterBaseFrequencies::update(void) {
 
         double a = alpha0 + 1.0;
         double b = alpha0 / currentValue - a + 2.0;
-        do 
-            {
+        {
             newFreqs = freqs[0];
             double newValue = Probability::Beta::rv(&rng, a, b);
             newFreqs[randomIndex] = newValue;
@@ -162,7 +159,8 @@ double ParameterBaseFrequencies::update(void) {
             lnHastingsRatio = Probability::Beta::lnPdf(a, newB, currentValue) - Probability::Beta::lnPdf(a, b, newValue);
             lnHastingsRatio += 2 * std::log(scaling) - 3 * std::log(sum);
             }
-        while(anyLessThanMin(newFreqs, MIN_FREQ) == true);
+        if (anyLessThanMin(newFreqs, MIN_FREQ) == true)
+            return rejectProposal();     // outside the support (see Parameter.hpp)
 
         freqs[0] = newFreqs;
 

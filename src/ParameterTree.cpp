@@ -106,11 +106,9 @@ double ParameterTree::updateBrlen(void) {
     oldProportions[1] = 1.0 - oldP;
     for (int i=0; i<2; i++)
         alphaForward[i] = oldProportions[i] * alpha0;
-    bool err = false;
-    do
-        {
-        err = Probability::Dirichlet::rv(&rng, alphaForward, newProportions);
-        } while (anyLessThanMin(newProportions, MIN_PROPORTION) == true || err == true);
+    bool err = Probability::Dirichlet::rv(&rng, alphaForward, newProportions);
+    if (err == true || anyLessThanMin(newProportions, MIN_PROPORTION) == true)
+        return rejectProposal();     // outside the support (see Parameter.hpp)
     double newP = newProportions[0];
     double lnForwardProb = Probability::Dirichlet::lnPdf(alphaForward, newProportions);
 
@@ -174,11 +172,9 @@ double ParameterTree::updateLocal(void) {
     alphaForward[0] = oldP[0] * alpha0;
     alphaForward[1] = oldP[1] * alpha0;
     std::vector<double> newP(2);
-    bool err = false;
-    do
-        {
-        err = Probability::Dirichlet::rv(&rng, alphaForward, newP);
-        } while (anyLessThanMin(newP, 0.0001) == true || err == true);
+    bool err = Probability::Dirichlet::rv(&rng, alphaForward, newP);
+    if (err == true || anyLessThanMin(newP, 0.0001) == true)
+        return rejectProposal();     // outside the support (see Parameter.hpp)
     double newV[3];
     for (int i=0; i<3; i++)
         newV[i] = backboneBranches[i]->getProportion() * (newP[0]/oldP[0]);

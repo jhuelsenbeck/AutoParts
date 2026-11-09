@@ -4,6 +4,8 @@
 #include <chrono>
 #include <fstream>
 #include <string>
+#include <vector>
+#include "UpdateInfo.hpp"
 class Model;
 class UserSettings;
 
@@ -15,6 +17,7 @@ class Mcmc {
 
     public:
                         Mcmc(Model** m, UserSettings* s);
+                       ~Mcmc(void) { UpdateInfo::setActive(nullptr); }
         void            run(void);
         void            run(int numChains, double temperature);
         void            burnin(void);
@@ -28,9 +31,11 @@ class Mcmc {
         double          power(int idx, double temperature);
         void            printToScreen(int coldChainIdx, int n, double lnL, Timer& timePt, Timer& start);
         void            sample(int coldChainIdx, int n, double lnL);
+        void            tuneProposals(int n);
         std::ofstream   parmStrm;
         std::ofstream   treeStrm;
         std::vector<int> chainIndex;
+        std::vector<UpdateInfo> tuning;     // proposal tuning for each chain temperature (0 = cold)
         int             numCycles;
         int             burnInCycles;
         int             printFrequency;

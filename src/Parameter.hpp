@@ -1,6 +1,7 @@
 #ifndef Parameter_hpp
 #define Parameter_hpp
 
+#include <limits>
 #include <string>
 #include <vector>
 class Model;
@@ -9,6 +10,12 @@ class Table;
 class UserSettings;
 
 
+
+// Returned by update() as the log proposal ratio when the proposed value falls outside
+// the parameter's support: the move is then rejected, leaving the value unchanged.
+// (Drawing again until the value is inside the support would make the proposal
+// asymmetric near the bounds, which the Hastings ratio does not allow for.)
+inline double rejectProposal(void) { return -std::numeric_limits<double>::infinity(); }
 
 class Parameter {
 

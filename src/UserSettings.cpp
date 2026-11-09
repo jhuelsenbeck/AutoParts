@@ -49,7 +49,7 @@ UserSettings::UserSettings(int argc,  char* argv[]) {
     temperature                     = 0.2;
     numMcmcCycles                   = 400000;
     burnIn                          = 0;
-    tuningFrequency                 = 1000;
+    tuningFrequency                 = 100;
     numGammaCategories              = 1;
     treeLengthMean                  = 1.0;
     treeLengthSD                    = 1.0;
@@ -64,7 +64,7 @@ UserSettings::UserSettings(int argc,  char* argv[]) {
     etPi                            = 1.2;
     etTheta                         = 1.2;
     etLength                        = 1.2;
-    tuningLocal                     = 200.0;
+    tuningLocal                     = 3200.0;
     tuningTreeLength                = log(4.0);
     tuningBaseFrequencies           = 600.0;
     tuningBaseFrequenciesSingle     = 600.0;

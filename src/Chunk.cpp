@@ -49,6 +49,9 @@ Chunk::Chunk(int myId, Alignment* a, Model* m, int nc) {
     id = myId;
     
     numSites = alignment->getNumSites();
+    numObservedSites = 0;
+    for (int c=0; c<numSites; c++)
+        numObservedSites += alignment->getNumSitesOfPattern(c);
     numGammaCategories = nc;
     
     condLikes = new ConditionalLikelihoods(alignment, numGammaCategories);

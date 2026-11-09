@@ -48,6 +48,7 @@ class Model {
         void                            getHeader(std::string& h);
         StateSets*                      getStateSetPtr(void) { return stateSets; }
         Tree*                           getTree(int id);
+        int                             getNumSubsets(void) { return numSubsets; }
         double                          getTreeLength(void);
         double                          getTreeLength(int subsetId);
         std::vector<std::string>        getTaxonNames(void);

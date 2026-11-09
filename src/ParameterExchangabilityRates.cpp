@@ -106,11 +106,9 @@ double ParameterExchangabilityRates::update(void) {
             }
             
         std::vector<double> newRates(6);
-        bool err = false;
-        do
-            {
-            err = Probability::Dirichlet::rv(&rng, alphaForward, newRates);
-            } while (anyLessThanMin(newRates, MIN_RATES) == true || err == true);
+        bool err = Probability::Dirichlet::rv(&rng, alphaForward, newRates);
+        if (err == true || anyLessThanMin(newRates, MIN_RATES) == true)
+            return rejectProposal();     // outside the support (see Parameter.hpp)
         
         std::vector<double> alphaReverse(6);
         for (int i=0; i<6; i++)
@@ -134,8 +132,7 @@ double ParameterExchangabilityRates::update(void) {
 
         double a = alpha0 + 1.0;
         double b = alpha0 / currentValue - a + 2.0;
-        do 
-            {
+        {
             newRates = rates[0];
             double newValue = Probability::Beta::rv(&rng, a, b);
             newRates[randomIndex] = newValue;
@@ -162,7 +159,8 @@ double ParameterExchangabilityRates::update(void) {
             lnHastingsRatio = Probability::Beta::lnPdf(a, newB, currentValue) - Probability::Beta::lnPdf(a, b, newValue);
             lnHastingsRatio += 4 * std::log(scaling) - 5 * std::log(sum);
             }
-        while(anyLessThanMin(newRates, MIN_RATES) == true);
+        if (anyLessThanMin(newRates, MIN_RATES) == true)
+            return rejectProposal();     // outside the support (see Parameter.hpp)
 
         rates[0] = newRates;
 

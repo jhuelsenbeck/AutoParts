@@ -435,6 +435,10 @@ double Restaurant::update(double power) {
         // change the parameter
         Parameter* parm = tableList[k]->getParameter();
         updateInfo.setAttemptedUpdate(UpdateType::NO_MOVE);
+        int numSitesAtTable = 0;     // the proposal's step size is scaled by this (see UpdateInfo)
+        for (int i : tableList[k]->getPatrons())
+            numSitesAtTable += modelPtr->getChunk(i)->getNumObservedSites();
+        updateInfo.setNumSites(numSitesAtTable);
         double lnPriorRatio = -parm->lnProbability();
         tableLnProposalRatio[k] = parm->update();
         lnPriorRatio += parm->lnProbability();
@@ -446,6 +450,8 @@ double Restaurant::update(double power) {
             patronList.push_back(i);
             }
         }
+
+    updateInfo.setNumSites(0);
 
     // calculate the likelihoods (each patron has its own buffers, so the patrons are done in parallel)
     pool.parallelFor((int)patronList.size(), [&](int j, int) {

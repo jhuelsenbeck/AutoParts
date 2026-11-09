@@ -98,12 +98,10 @@ double ParameterGammaShape::update(void) {
     RandomVariable& rng = RandomVariable::randomVariableInstance();
     double tuning = UpdateInfo::updateInfo().attempt(UpdateType::SHAPE_SCALE);
     
-    double newVal = 0.0, randomFactor = 1.0;
-    do
-        {
-        randomFactor = exp( (rng.uniformRv()-0.5)*tuning );
-        newVal = shape[0] * randomFactor;
-        } while (newVal < MIN_SHAPE || newVal > MAX_SHAPE);
+    double randomFactor = exp( (rng.uniformRv()-0.5)*tuning );
+    double newVal = shape[0] * randomFactor;
+    if (newVal < MIN_SHAPE || newVal > MAX_SHAPE)
+        return rejectProposal();     // outside the support (see Parameter.hpp)
     
     shape[0] = newVal;
     Probability::Gamma::discretization(gammaRates[0], shape[0], shape[0], numGammaCategories, false);

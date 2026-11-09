@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "Mcmc.hpp"
+#include "Chunk.hpp"
 #include "Model.hpp"
 #include "Msg.hpp"
 #include "RandomVariable.hpp"
@@ -23,6 +24,18 @@ Mcmc::Mcmc(Model** m, UserSettings* s) {
     tuningFrequency = settings->getTuningFrequency();
     printFrequency = settings->getPrintFrequency();
     sampleFrequency = settings->getSampleFrequency();
+
+    // Each chain temperature tunes its proposals separately, starting from the values
+    // given by the user. The step sizes are scaled by the number of sites at a table
+    // relative to the mean number of sites in a data subset (see UpdateInfo).
+    int numChains = settings->getNumChains();
+    UpdateInfo::setActive(nullptr);
+    tuning.assign(numChains, UpdateInfo::updateInfo());
+    double totalSites = 0.0;
+    for (int i=0; i<model[0]->getNumSubsets(); i++)
+        totalSites += model[0]->getChunk(i)->getNumObservedSites();
+    UpdateInfo::setReferenceNumSites(totalSites / model[0]->getNumSubsets());
+    UpdateInfo::setActive(&tuning[0]);
 }
 
 void Mcmc::closeOutputFiles(void) {
@@ -156,6 +169,7 @@ void Mcmc::run(void) {
     for (int n=1; n<=numCycles; n++)
         {
         // propose a new state for the chain
+        UpdateInfo::setActive(&tuning[0]);
         double lnL = model[0]->update(1.0);
         
         if (n % printFrequency == 0)
@@ -168,7 +182,7 @@ void Mcmc::run(void) {
             sample(0, n, lnL);
         }
     std::cout << std::endl;
-    UpdateInfo::updateInfo().summary();
+    tuning[0].summary();
     
     // close file
     closeOutputFiles();
@@ -203,6 +217,7 @@ void Mcmc::run(int numChains, double temperature) {
         for (int k=0; k<numChains; k++)
             {
             // propose a new state for the chain
+            UpdateInfo::setActive(&tuning[chainIndex[k]]);
             lnL[k] = model[k]->update( power(chainIndex[k], temperature) );
             }
         
@@ -237,7 +252,7 @@ void Mcmc::run(int numChains, double temperature) {
             }
         }
     std::cout << std::endl;
-    UpdateInfo::updateInfo().summary();
+    tuning[0].summary();
     
     // close file
     closeOutputFiles();
@@ -250,6 +265,7 @@ void Mcmc::burnin(void) {
     for (int n=1; n<=burnInCycles; n++)
         {
         // propose a new state for the chain
+        UpdateInfo::setActive(&tuning[0]);
         double lnL = model[0]->update(1.0);
         
         if(n % printFrequency == 0 || n == 1)
@@ -258,14 +274,11 @@ void Mcmc::burnin(void) {
             }
 
         if (n % tuningFrequency == 0)
-            {
-            std::cout << "\n   Tuning Parameters..." << std::endl;
-            UpdateInfo::updateInfo().summary();
-            UpdateInfo::updateInfo().tune();
-            }
+            tuneProposals(n);
         }
     std::cout << std::endl;
-    UpdateInfo::updateInfo().resetStats();
+    for (UpdateInfo& u : tuning)
+        u.resetStats();
 }
 
 void Mcmc::burnin(int numChains, double temperature) {
@@ -291,6 +304,7 @@ void Mcmc::burnin(int numChains, double temperature) {
         // propose a new state for the chain
         for (int k=0; k<numChains; k++)
             {
+            UpdateInfo::setActive(&tuning[chainIndex[k]]);
             lnL[k] = model[k]->update( power(chainIndex[k], temperature) );
             }
             
@@ -318,14 +332,11 @@ void Mcmc::burnin(int numChains, double temperature) {
             }
 
         if (n % tuningFrequency == 0)
-            {
-            std::cout << "\n   Tuning Parameters..." << std::endl;
-            UpdateInfo::updateInfo().summary();
-            UpdateInfo::updateInfo().tune();
-            }
+            tuneProposals(n);
         }
     std::cout << std::endl;
-    UpdateInfo::updateInfo().resetStats();
+    for (UpdateInfo& u : tuning)
+        u.resetStats();
 }
 
 void Mcmc::sample(int coldChainIdx, int n, double lnL) {
@@ -344,4 +355,17 @@ void Mcmc::sample(int coldChainIdx, int n, double lnL) {
     std::string parmStr;
     model[coldChainIdx]->getParameterValues(parmStr);
     parmStrm << n << '\t' << lnL << '\t' << parmStr << std::endl;
+}
+
+void Mcmc::tuneProposals(int n) {
+
+    // show the cold chain's acceptance rates for this batch now and again, then tune
+    // the proposals of every chain temperature
+    if (n % (10 * tuningFrequency) == 0 || n + tuningFrequency > burnInCycles)
+        {
+        std::cout << "\n   Tuning Parameters (cold chain, last " << tuningFrequency << " cycles)..." << std::endl;
+        tuning[0].summary();
+        }
+    for (UpdateInfo& u : tuning)
+        u.tune();
 }

@@ -86,12 +86,10 @@ double ParameterTreeLength::update(void) {
 
     RandomVariable& rng = RandomVariable::randomVariableInstance();
         double tuning = UpdateInfo::updateInfo().attempt(UpdateType::TREE_LENGTH);
-    double newVal = 0.0, randomFactor = 1.0;
-    do
-        {
-        randomFactor = exp( (rng.uniformRv()-0.5)*tuning );
-        newVal = length[0] * randomFactor;
-        } while (newVal < MIN_LENGTH || newVal > MAX_LENGTH);
+    double randomFactor = exp( (rng.uniformRv()-0.5)*tuning );
+    double newVal = length[0] * randomFactor;
+    if (newVal < MIN_LENGTH || newVal > MAX_LENGTH)
+        return rejectProposal();     // outside the support (see Parameter.hpp)
     length[0] = newVal;
     return log(randomFactor);
 }

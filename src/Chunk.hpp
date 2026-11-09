@@ -34,6 +34,7 @@ class Chunk {
         void                        flipActiveEigens(void);
         int                         getId(void) { return id; }
         int                         getNumSitesForChunk(void);
+        int                         getNumObservedSites(void) { return numObservedSites; }
         void                        print(void);
         SubsetParameters            currentParameters(void);
         double                      lnLikelihood(void);
@@ -52,6 +53,7 @@ class Chunk {
         void                        initializeTipStates(void);
         int                         id;
         int                         numSites;
+        int                         numObservedSites;           // number of sites (numSites counts the site patterns)
         int                         numGammaCategories;
         Alignment*                  alignment;
         Model*                      model;
