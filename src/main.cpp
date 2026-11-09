@@ -78,8 +78,8 @@ int main(int argc, char* argv[]) {
             
             // perform the MCMC analysis
             Mcmc mcmc(model, &settings);
-            mcmc.burnin(numChains, settings.getTemperature());
-            mcmc.run(numChains, settings.getTemperature());
+            mcmc.burnin(numChains);
+            mcmc.run(numChains);
             
             // compare to the true results
             std::vector<ParameterSummary*> parms;
@@ -105,8 +105,8 @@ int main(int argc, char* argv[]) {
         
         // perform the MCMC analysis
         Mcmc mcmc(model, &settings);
-        mcmc.burnin(numChains, settings.getTemperature());
-        mcmc.run(numChains, settings.getTemperature());
+        mcmc.burnin(numChains);
+        mcmc.run(numChains);
 
         // summarize the results
         std::vector<ParameterSummary*> parms;

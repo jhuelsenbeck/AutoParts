@@ -47,6 +47,7 @@ UserSettings::UserSettings(int argc,  char* argv[]) {
     numThreads                      = ThreadPool::defaultNumThreads();
     numAuxiliaryTables              = 10;
     temperature                     = 0.2;
+    tuneTemperature                 = true;
     numMcmcCycles                   = 400000;
     burnIn                          = 0;
     tuningFrequency                 = 100;
@@ -104,6 +105,8 @@ UserSettings::UserSettings(int argc,  char* argv[]) {
                 numChains = stoi(settings[i]);
             else if (currentArg == "-temp")
                 temperature = stof(settings[i]);
+            else if (currentArg == "-tuneTemp")
+                tuneTemperature = yesNo(settings[i]);
             else if (currentArg == "-n")
                 numMcmcCycles = stoi(settings[i]);
             else if (currentArg == "-p")
@@ -201,7 +204,8 @@ void UserSettings::print(void) {
     std::cout << "   * Random number seed                                    = " << seed << std::endl;
     std::cout << "   * Number of threads                                     = " << numThreads << std::endl;
     std::cout << "   * Number of auxiliary tables (Neal's m)                 = " << numAuxiliaryTables << std::endl;
-    std::cout << "   * MC^3 temperature                                      = " << temperature << std::endl;
+    std::cout << "   * MC^3 temperature (starting value, if tuned)           = " << temperature << std::endl;
+    std::cout << "   * MC^3 temperature tuned during the burn-in             = " << ((tuneTemperature == true) ? "yes" : "no") << std::endl;
     std::cout << "   * Number of MCMC cycles                                 = " << numMcmcCycles << std::endl;
     std::cout << "   * Sample Frequency                                      = " << sampleFrequency << std::endl;
     std::cout << "   * Print Frequency                                       = " << printFrequency << std::endl;
@@ -255,6 +259,9 @@ void UserSettings::usage(void) {
     std::cout << "   * -s               : Sample-to-file frequency" << std::endl;
     std::cout << "   * -b               : The number of burn-in iterations" << std::endl;
     std::cout << "   * -tu              : How frequently to tune the tunable parameters during the burn-in" << std::endl;
+    std::cout << "   * -nc              : Number of Metropolis-coupled chains (MC^3)" << std::endl;
+    std::cout << "   * -temp            : MC^3 temperature (chain i is heated to power 1/(1+i*temp))" << std::endl;
+    std::cout << "   * -tuneTemp        : Tune the MC^3 temperature during the burn-in (yes/no; default yes)" << std::endl;
     std::cout << "   * -tLocal          : MCMC tuning parameter for the tree topology parameter" << std::endl;
     std::cout << "   * -tTBR            : MCMC tuning parameter for heat parameter for biased TBR proposals" << std::endl;
     std::cout << "   * -tBrlen          : MCMC tuning parameter for the branch proportions update" << std::endl;

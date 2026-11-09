@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cmath>
 #include <iomanip>
 #include <iostream>
@@ -36,6 +37,22 @@ Mcmc::Mcmc(Model** m, UserSettings* s) {
         totalSites += model[0]->getChunk(i)->getNumObservedSites();
     UpdateInfo::setReferenceNumSites(totalSites / model[0]->getNumSubsets());
     UpdateInfo::setActive(&tuning[0]);
+
+    // the powers start at 1/(1+i*T), T given by -temp; when they are tuned, each gap
+    // between neighbouring powers (on the log scale) is adjusted separately
+    double temperature = settings->getTemperature();
+    powers.resize(numChains);
+    for (int i=0; i<numChains; i++)
+        powers[i] = 1.0 / (1.0 + i * temperature);
+    logGaps.resize(std::max(numChains - 1, 0));
+    for (int i=0; i<numChains-1; i++)
+        logGaps[i] = std::log(std::log(powers[i]) - std::log(powers[i+1]));
+    isTemperatureTuned = settings->getTuneTemperature();
+    numTemperatureTunings = 0;
+    swapTries.assign(std::max(numChains - 1, 0), 0);
+    swapAccepts.assign(std::max(numChains - 1, 0), 0);
+    swapProbSum.assign(std::max(numChains - 1, 0), 0.0);
+    swapProbCount = 0;
 }
 
 void Mcmc::closeOutputFiles(void) {
@@ -111,11 +128,6 @@ void Mcmc::openOutputFiles(void) {
 
 }
 
-double Mcmc::power(int idx, double temperature) {
-
-    return 1.0 / (1 + idx*temperature);
-}
-
 void Mcmc::printToScreen(int coldChainIdx, int n, double lnL, Timer& t2, Timer& t1) {
 
     std::cout << "   * " << std::setw(6) << n << " -- " << std::fixed << std::setprecision(2) << lnL << " -- ";
@@ -189,7 +201,7 @@ void Mcmc::run(void) {
 }
 
 // MCMCMC
-void Mcmc::run(int numChains, double temperature) {
+void Mcmc::run(int numChains) {
 
     if (numChains == 1)
         {
@@ -197,7 +209,9 @@ void Mcmc::run(int numChains, double temperature) {
         return;
         }
     
-    RandomVariable& rng = RandomVariable::randomVariableInstance();
+    // the swap statistics shown at the end are for the sampling only
+    std::fill(swapTries.begin(), swapTries.end(), 0);
+    std::fill(swapAccepts.begin(), swapAccepts.end(), 0);
 
     // This allows us to continue from burn-in, but also jump straight into sampling if we need to
     if(chainIndex.empty()){
@@ -218,25 +232,10 @@ void Mcmc::run(int numChains, double temperature) {
             {
             // propose a new state for the chain
             UpdateInfo::setActive(&tuning[chainIndex[k]]);
-            lnL[k] = model[k]->update( power(chainIndex[k], temperature) );
+            lnL[k] = model[k]->update( power(chainIndex[k]) );
             }
         
-        // attempt swap
-        int idx0 = (int)(rng.uniformRv() * numChains);
-        int idx1 = idx0;
-        while (idx1 == idx0)
-            idx1 = (int)(rng.uniformRv() * numChains);
-        double pow0 = power(chainIndex[idx0], temperature);
-        double pow1 = power(chainIndex[idx1], temperature);
-        // only the likelihood is heated (target of a chain is L^power * prior), so the
-        // prior cancels in the swap ratio
-        double lnR = (lnL[idx0] - lnL[idx1]) * (pow1 - pow0);
-        if (std::log(rng.uniformRv()) < lnR)
-            {
-            int tempIdx = chainIndex[idx0];
-            chainIndex[idx0] = chainIndex[idx1];
-            chainIndex[idx1] = tempIdx;
-            }
+        attemptSwap(lnL);
             
         if (n % printFrequency == 0)
             {
@@ -253,6 +252,7 @@ void Mcmc::run(int numChains, double temperature) {
         }
     std::cout << std::endl;
     tuning[0].summary();
+    printSwapSummary();
     
     // close file
     closeOutputFiles();
@@ -281,15 +281,13 @@ void Mcmc::burnin(void) {
         u.resetStats();
 }
 
-void Mcmc::burnin(int numChains, double temperature) {
+void Mcmc::burnin(int numChains) {
 
     if (numChains == 1)
         {
         burnin();
         return;
         }
-
-    RandomVariable& rng = RandomVariable::randomVariableInstance();
 
     if(chainIndex.empty()){
         for (int i=0; i<numChains; i++)
@@ -305,25 +303,10 @@ void Mcmc::burnin(int numChains, double temperature) {
         for (int k=0; k<numChains; k++)
             {
             UpdateInfo::setActive(&tuning[chainIndex[k]]);
-            lnL[k] = model[k]->update( power(chainIndex[k], temperature) );
+            lnL[k] = model[k]->update( power(chainIndex[k]) );
             }
             
-        // swap
-        int idx0 = (int)(rng.uniformRv() * numChains);
-        int idx1 = idx0;
-        while (idx1 == idx0)
-            idx1 = (int)(rng.uniformRv() * numChains);
-        double pow0 = power(chainIndex[idx0], temperature);
-        double pow1 = power(chainIndex[idx1], temperature);
-        // only the likelihood is heated (target of a chain is L^power * prior), so the
-        // prior cancels in the swap ratio
-        double lnR = (lnL[idx0] - lnL[idx1]) * (pow1 - pow0);
-        if (std::log(rng.uniformRv()) < lnR)
-            {
-            int tempIdx = chainIndex[idx0];
-            chainIndex[idx0] = chainIndex[idx1];
-            chainIndex[idx1] = tempIdx;
-            }
+        attemptSwap(lnL);
         
         if(n % printFrequency == 0 || n == 1)
             {
@@ -337,6 +320,13 @@ void Mcmc::burnin(int numChains, double temperature) {
     std::cout << std::endl;
     for (UpdateInfo& u : tuning)
         u.resetStats();
+    if (isTemperatureTuned == true)
+        {
+        std::cout << "   MC^3 powers after tuning =" << std::fixed << std::setprecision(4);
+        for (double p : powers)
+            std::cout << " " << p;
+        std::cout << std::endl << std::endl;
+        }
 }
 
 void Mcmc::sample(int coldChainIdx, int n, double lnL) {
@@ -365,7 +355,103 @@ void Mcmc::tuneProposals(int n) {
         {
         std::cout << "\n   Tuning Parameters (cold chain, last " << tuningFrequency << " cycles)..." << std::endl;
         tuning[0].summary();
+        printSwapSummary();
         }
     for (UpdateInfo& u : tuning)
         u.tune();
+    tuneTemperature();
+}
+
+void Mcmc::attemptSwap(std::vector<double>& lnL) {
+
+    // Propose to swap the states of the chains at two neighbouring temperatures, i and
+    // i+1 (swaps between distant temperatures are seldom accepted). Only the likelihood
+    // is heated (the target of a chain is L^power * prior), so the prior cancels in the
+    // ratio.
+    int numChains = (int)lnL.size();
+    if (numChains < 2)
+        return;
+    RandomVariable& rng = RandomVariable::randomVariableInstance();
+
+    // for tuning the powers, the probability that a swap between each pair of neighbouring
+    // temperatures would be accepted (much less noisy than whether the one swap tried is)
+    if (isTemperatureTuned == true)
+        {
+        std::vector<int> chainAt(numChains);
+        for (int k=0; k<numChains; k++)
+            chainAt[chainIndex[k]] = k;
+        for (int t=0; t<numChains-1; t++)
+            {
+            double r = (lnL[chainAt[t]] - lnL[chainAt[t+1]]) * (power(t+1) - power(t));
+            swapProbSum[t] += (r >= 0.0) ? 1.0 : std::exp(r);
+            }
+        swapProbCount++;
+        }
+    int t = (int)(rng.uniformRv() * (numChains - 1));
+    int idx0 = -1, idx1 = -1;
+    for (int k=0; k<numChains; k++)
+        {
+        if (chainIndex[k] == t)
+            idx0 = k;
+        else if (chainIndex[k] == t + 1)
+            idx1 = k;
+        }
+    double pow0 = power(t);
+    double pow1 = power(t + 1);
+    double lnR = (lnL[idx0] - lnL[idx1]) * (pow1 - pow0);
+    swapTries[t]++;
+    if (std::log(rng.uniformRv()) < lnR)
+        {
+        std::swap(chainIndex[idx0], chainIndex[idx1]);
+        swapAccepts[t]++;
+        }
+}
+
+void Mcmc::printSwapSummary(void) {
+
+    if (swapTries.empty() == true)
+        return;
+    std::cout << "   * MC^3 swaps between neighbouring temperatures:" << std::endl;
+    for (int t=0; t<swapTries.size(); t++)
+        {
+        std::cout << "   *    power " << std::setprecision(3) << std::fixed << power(t) << " <-> " << power(t + 1) << ": ";
+        std::cout << swapAccepts[t] << " / " << swapTries[t] << " accepted";
+        if (swapTries[t] > 0)
+            std::cout << " (" << std::setprecision(1) << 100.0 * swapAccepts[t] / swapTries[t] << "%)";
+        std::cout << std::endl;
+        }
+    std::cout << std::endl;
+}
+
+void Mcmc::tuneTemperature(void) {
+
+    // During the burn-in, adjust the heating so that the probability of accepting a swap
+    // between each pair of neighbouring temperatures is about 30%: lower, and states rarely
+    // pass between the chains; higher, and the heated chains are hardly heated. Each gap
+    // between neighbouring powers is adjusted on its own (with a single temperature the
+    // gap next to the cold chain is the hardest to cross). As for the proposals, this is
+    // a Robbins-Monro step on the log scale, with steps that shrink; the powers are fixed
+    // once the burn-in is over.
+    const double target = 0.30;
+    const double gain = 3.0;
+    const double maxLogChange = std::log(2.0);
+    if (isTemperatureTuned == false || swapProbSum.empty() == true || swapProbCount == 0)
+        return;
+    numTemperatureTunings++;
+    double gamma = 1.0 / std::sqrt((double)numTemperatureTunings);
+    for (int t=0; t<swapProbSum.size(); t++)
+        {
+        double acceptProb = swapProbSum[t] / swapProbCount;
+        // accepting too often means the powers are too close: widen the gap
+        double logChange = gain * gamma * (acceptProb - target);
+        logChange = std::max(-maxLogChange, std::min(maxLogChange, logChange));
+        logGaps[t] += logChange;
+        logGaps[t] = std::max(std::log(1e-4), std::min(std::log(10.0), logGaps[t]));
+        swapProbSum[t] = 0.0;
+        }
+    swapProbCount = 0;
+    for (int t=0; t<logGaps.size(); t++)
+        powers[t+1] = powers[t] * std::exp(-std::exp(logGaps[t]));
+    std::fill(swapTries.begin(), swapTries.end(), 0);
+    std::fill(swapAccepts.begin(), swapAccepts.end(), 0);
 }

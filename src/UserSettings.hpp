@@ -37,6 +37,7 @@ class UserSettings {
         int             getNumSims(void) { return numSims; }
         std::string     getSimFile(void) { return simFile; }
         double          getTemperature(void) { return temperature; }
+        bool            getTuneTemperature(void) { return tuneTemperature; }
         std::string     getTreeFile(void) { return treeFile; }
         double          getTuningBrlen(void) { return tuningBrlen; }
         double          getTuningLocal(void) { return tuningLocal; }
@@ -72,6 +73,7 @@ class UserSettings {
         int             tuningFrequency;
         int             numGammaCategories;
         double          temperature;
+        bool            tuneTemperature;
         double          treeLengthMean;
         double          treeLengthSD;
         double          shapeLambda;
