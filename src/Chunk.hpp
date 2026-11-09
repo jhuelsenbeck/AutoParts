@@ -1,6 +1,8 @@
 #ifndef Chunk_hpp
 #define Chunk_hpp
 
+#include <vector>
+
 class Alignment;
 class ConditionalLikelihoods;
 class Model;
@@ -27,6 +29,7 @@ class Chunk {
         void                        updateTransitionProbabilities(void);
         
     private:
+        void                        initializeTipStates(void);
         int                         id;
         int                         numSites;
         int                         numGammaCategories;
@@ -34,6 +37,7 @@ class Chunk {
         Model*                      model;
         ConditionalLikelihoods*     condLikes;
         TransitionProbabilities*    transProbs;
+        std::vector<int>            tipStates;          // [taxon * numSites + site]: nucleotide 0-3, or -1 if ambiguous
 };
 
 #endif

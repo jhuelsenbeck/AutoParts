@@ -509,6 +509,24 @@ void Model::initializeStateSets(UserSettings* s) {
 	stateSets = new StateSets(alignment, s);
 }
 
+// Returns the cached log-likelihood of each data subset, computing it on the first call.
+// Restaurant::update keeps these values current, so they are not recomputed afterwards.
+std::vector<double>& Model::getChunkLnLs(void) {
+
+    if (chunkLnLValid == false)
+        {
+        chunkLnL.resize(chunks.size());
+        for (int i=0; i<chunks.size(); i++)
+            {
+            chunks[i]->updateRateMatrix();
+            chunks[i]->updateTransitionProbabilities();
+            chunkLnL[i] = chunks[i]->lnLikelihood();
+            }
+        chunkLnLValid = true;
+        }
+    return chunkLnL;
+}
+
 double Model::lnLikelihood(void) {
 
     double lnL = 0.0;

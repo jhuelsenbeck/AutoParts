@@ -402,16 +402,10 @@ double Restaurant::update(double power) {
         
     RandomVariable& rng = RandomVariable::randomVariableInstance();
     
-    // calculate the initial likelihoods
-    std::vector<double> curLnL(numPatrons);
+    // the current likelihood of each patron (data subset), cached in the model and kept
+    // up to date below, so it does not need to be recomputed at the start of each update
+    std::vector<double>& curLnL = modelPtr->getChunkLnLs();
     std::vector<double> newLnL(numPatrons);
-    for (int i=0; i<numPatrons; i++)
-        {
-        Chunk* chunk = modelPtr->getChunk(i);
-        chunk->updateRateMatrix();
-        chunk->updateTransitionProbabilities();
-        curLnL[i] = chunk->lnLikelihood();
-        }
         
     // 1. update the parameters on each table
     for (Table* tab : tables)
@@ -503,13 +497,15 @@ double Restaurant::update(double power) {
                             
             // calculate the likelihood when the patron is seated at each of the tables (including the auxiliary tables)
             std::map<Table*,double> tableLikes;
+            std::map<Table*,double> tableLnL;     // unheated log-likelihood of the patron at each table
             for (Table* t : tables)
                 {
                 t->addPatron(n);
                 if (t->getParameter()->getUpdateModifiesEigens() == true)
                     chunk->updateRateMatrix();
                 chunk->updateTransitionProbabilities();
-                double lnL = chunk->lnLikelihood() * power;
+                double rawLnL = chunk->lnLikelihood();
+                double lnL = rawLnL * power;
                 std::set<Table*>::iterator it = auxiliaryTables.find(t);
                 double lnP = 0.0;
                 if (it == auxiliaryTables.end())
@@ -517,6 +513,7 @@ double Restaurant::update(double power) {
                 else
                     lnP = log(alpha/numAuxliaryTables);
                 tableLikes.insert( std::make_pair(t, lnL+lnP) );
+                tableLnL.insert( std::make_pair(t, rawLnL) );
                 t->removePatron(n);
                 }
 
@@ -531,6 +528,7 @@ double Restaurant::update(double power) {
             if (tab->getParameter()->getUpdateModifiesEigens() == true)
                 chunk->updateRateMatrix();
             chunk->updateTransitionProbabilities();
+            curLnL[n] = tableLnL[tab];
             
             // remove any unused tables
             std::vector<Table*> emptyTables;
@@ -545,15 +543,22 @@ double Restaurant::update(double power) {
             }
         }
  
-    // 3. refresh all likelihood calculations (necessary?)
+    // 3. the total likelihood, from the cached per-patron values
     double lnL = 0.0;
+    for (int i=0; i<numPatrons; i++)
+        lnL += curLnL[i];
+
+#   if defined(CHECK_LNL_CACHE)
     for (int i=0; i<numPatrons; i++)
         {
         Chunk* chunk = modelPtr->getChunk(i);
         chunk->updateRateMatrix();
         chunk->updateTransitionProbabilities();
-        lnL += chunk->lnLikelihood();
+        double fresh = chunk->lnLikelihood();
+        if (fresh != curLnL[i])
+            Msg::error("Cached likelihood for subset " + std::to_string(i) + " is stale (" + std::to_string(curLnL[i]) + " vs " + std::to_string(fresh) + ")");
         }
+#   endif
         
     // 4. update the concentration parameter (Gibb's sampler)
 	if ( settingsPtr->getIsConcentrationParameterFixed() == false && isSeatingRv == true )

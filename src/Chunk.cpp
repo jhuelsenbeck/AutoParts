@@ -12,6 +12,8 @@
 
 #undef NO_DATA
 
+#define MAX_GAMMA_CATEGORIES 64
+
 
 Chunk::Chunk(const Chunk& c) {
 
@@ -23,6 +25,7 @@ Chunk::Chunk(const Chunk& c) {
 
     condLikes = new ConditionalLikelihoods(alignment, numGammaCategories);
     transProbs = new TransitionProbabilities(model, this, 2*alignment->getNumTaxa()-1, numGammaCategories);
+    initializeTipStates();
 }
 
 Chunk::Chunk(int myId, Alignment* a, Model* m, int nc) {
@@ -36,6 +39,7 @@ Chunk::Chunk(int myId, Alignment* a, Model* m, int nc) {
     
     condLikes = new ConditionalLikelihoods(alignment, numGammaCategories);
     transProbs = new TransitionProbabilities(model, this, 2*alignment->getNumTaxa()-1, numGammaCategories);
+    initializeTipStates();
 }
 
 Chunk::~Chunk(void) {
@@ -60,6 +64,97 @@ void Chunk::flipActiveEigens(void) {
     transProbs->flipActiveEigens();
 }
 
+namespace {
+
+    // The conditional likelihoods are stored as [site][gamma category][state] and the
+    // transition probability matrices are column major, so column j of matrix T is
+    // T[4*j], ..., T[4*j+3]. Each function below forms, for one child of node p,
+    //    x_i = sum_j P(i,j) * cl_child[j]
+    // and either stores it in (FIRST == true) or multiplies it into the conditional
+    // likelihoods of p. The arithmetic is the same, term for term, as computing all of
+    // the children's sums and multiplying them together in one pass.
+
+    template<bool FIRST>
+    inline void applyInternalChild(double* clP, const double* cl, const double* const* T, int numSites, int numCats) {
+
+        for (int c=0; c<numSites; c++)
+            {
+            for (int k=0; k<numCats; k++)
+                {
+                const double* M = T[k];
+                double x0 = cl[0], x1 = cl[1], x2 = cl[2], x3 = cl[3];
+                for (int i=0; i<4; i++)
+                    {
+                    double sum = M[i]*x0 + M[4+i]*x1 + M[8+i]*x2 + M[12+i]*x3;
+                    if (FIRST == true)
+                        clP[i] = sum;
+                    else
+                        clP[i] *= sum;
+                    }
+                clP += 4;
+                cl  += 4;
+                }
+            }
+    }
+
+    template<bool FIRST>
+    inline void applyTipChild(double* clP, const double* cl, const int* states, const double* const* T, int numSites, int numCats) {
+
+        for (int c=0; c<numSites; c++)
+            {
+            int s = states[c];
+            if (s >= 0)
+                {
+                // unambiguous tip: the sum over j picks out column s of the matrix
+                for (int k=0; k<numCats; k++)
+                    {
+                    const double* col = T[k] + 4*s;
+                    for (int i=0; i<4; i++)
+                        {
+                        if (FIRST == true)
+                            clP[i] = col[i];
+                        else
+                            clP[i] *= col[i];
+                        }
+                    clP += 4;
+                    }
+                cl += 4 * numCats;
+                }
+            else
+                {
+                applyInternalChild<FIRST>(clP, cl, T, 1, numCats);
+                clP += 4 * numCats;
+                cl  += 4 * numCats;
+                }
+            }
+    }
+}
+
+void Chunk::initializeTipStates(void) {
+
+    int numTaxa = alignment->getNumTaxa();
+    tipStates.assign(numTaxa * numSites, -1);
+    for (int i=0; i<numTaxa; i++)
+        {
+        for (int j=0; j<numSites; j++)
+            {
+            int possibleNucs[4];
+            alignment->getPossibleNucs(alignment->matrixEntry(i, j), possibleNucs);
+            int numPossible = 0, state = -1;
+            for (int s=0; s<4; s++)
+                {
+                if (possibleNucs[s] == 1)
+                    {
+                    numPossible++;
+                    state = s;
+                    }
+                }
+            if (numPossible == 1)
+                tipStates[i * numSites + j] = state;
+            }
+        }
+}
+
 double Chunk::lnLikelihood(void) {
 
 #   if defined(NO_DATA)
@@ -72,83 +167,49 @@ double Chunk::lnLikelihood(void) {
     std::vector<Node*>& dpSeq = t->getDownPassSequence();
     if (t->getRoot()->getDescendants().size() != 3)
         Msg::error("Expecting three descendants of the root");
+    if (numGammaCategories > MAX_GAMMA_CATEGORIES)
+        Msg::error("Too many gamma categories for the likelihood calculation");
     
+    const double* T[MAX_GAMMA_CATEGORIES];
     for (int n=0; n<dpSeq.size(); n++)
         {
         Node* p = dpSeq[n];
         if (p->getIsLeaf() == false)
             {
             std::vector<Node*> desc = p->getDescendants();
-            
-            if (desc.size() == 2)
-                {
-                double* clL = condLikes->getConditionalLikelihoods(0, desc[0]->getIndex());
-                double* clR = condLikes->getConditionalLikelihoods(0, desc[1]->getIndex());
-                double* clP = condLikes->getConditionalLikelihoods(0, p->getIndex()      );
-                for (int c=0; c<numSites; c++)
-                    {
-                    for (int k=0; k<numGammaCategories; k++)
-                        {
-                        NucleotideSquareMatrix_t& tpL = tp[k][desc[0]->getIndex()]; // check to see if this can be brought outside of the loop
-                        NucleotideSquareMatrix_t& tpR = tp[k][desc[1]->getIndex()]; // over the number of sites...may be slow
-                        for (int i=0; i<4; i++)
-                            {
-                            double sumL = 0.0, sumR = 0.0;
-                            for (int j=0; j<4; j++)
-                                {
-                                sumL += tpL(i,j) * clL[j];
-                                sumR += tpR(i,j) * clR[j];
-                                }
-                            clP[i] = sumL * sumR;
-                            }
-                        clP += 4;
-                        clL += 4;
-                        clR += 4;
-                        }
-                    }
-                }
-            else if (desc.size() == 3)
-                {
-                if (p != t->getRoot())
-                    Msg::error("Only expecting a three-way split at the root of the tree");
-                double* cl0 = condLikes->getConditionalLikelihoods(0, desc[0]->getIndex());
-                double* cl1 = condLikes->getConditionalLikelihoods(0, desc[1]->getIndex());
-                double* cl2 = condLikes->getConditionalLikelihoods(0, desc[2]->getIndex());
-                double* clP = condLikes->getConditionalLikelihoods(0, p->getIndex()      );
-                for (int c=0; c<numSites; c++)
-                    {
-                    for (int k=0; k<numGammaCategories; k++)
-                        {
-                        NucleotideSquareMatrix_t& tp0 = tp[k][desc[0]->getIndex()]; // check to see if this can be brought outside of the loop
-                        NucleotideSquareMatrix_t& tp1 = tp[k][desc[1]->getIndex()]; // over the number of sites...may be slow
-                        NucleotideSquareMatrix_t& tp2 = tp[k][desc[2]->getIndex()]; // over the number of sites...may be slow
-                        for (int i=0; i<4; i++)
-                            {
-                            double sum0 = 0.0, sum1 = 0.0, sum2 = 0.0;
-                            for (int j=0; j<4; j++)
-                                {
-                                sum0 += tp0(i,j) * cl0[j];
-                                sum1 += tp1(i,j) * cl1[j];
-                                sum2 += tp2(i,j) * cl2[j];
-                                }
-                            clP[i] = sum0 * sum1 * sum2;
-                            }
-                        clP += 4;
-                        cl0 += 4;
-                        cl1 += 4;
-                        cl2 += 4;
-                        }
-                    }
-                }
-            else
-                {
+            if (desc.size() != 2 && desc.size() != 3)
                 Msg::error("Incorrect number of descendants!");
+            if (desc.size() == 3 && p != t->getRoot())
+                Msg::error("Only expecting a three-way split at the root of the tree");
+                
+            double* clP = condLikes->getConditionalLikelihoods(0, p->getIndex());
+            for (int d=0; d<desc.size(); d++)
+                {
+                int idx = desc[d]->getIndex();
+                const double* clD = condLikes->getConditionalLikelihoods(0, idx);
+                for (int k=0; k<numGammaCategories; k++)
+                    T[k] = tp[k][idx].data();
+                if (desc[d]->getIsLeaf() == true)
+                    {
+                    const int* states = &tipStates[idx * numSites];
+                    if (d == 0)
+                        applyTipChild<true>(clP, clD, states, T, numSites, numGammaCategories);
+                    else
+                        applyTipChild<false>(clP, clD, states, T, numSites, numGammaCategories);
+                    }
+                else
+                    {
+                    if (d == 0)
+                        applyInternalChild<true>(clP, clD, T, numSites, numGammaCategories);
+                    else
+                        applyInternalChild<false>(clP, clD, T, numSites, numGammaCategories);
+                    }
                 }
             }
         }
         
     // calculate average probability at root
-    std::vector<double> f = model->getBaseFrequencies(id);
+    std::vector<double>& f = model->getBaseFrequencies(id);
     double lnL = 0.0;
     double catProb = 1.0 / numGammaCategories;
     double* clRoot = condLikes->getConditionalLikelihoods(0, t->getRoot()->getIndex());

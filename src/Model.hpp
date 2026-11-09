@@ -51,6 +51,7 @@ class Model {
         double                          getTreeLength(int subsetId);
         std::vector<std::string>        getTaxonNames(void);
         void                            getParameterValues(std::string& v);
+        std::vector<double>&            getChunkLnLs(void);
         double                          lnLikelihood(void);
         double                          lnLikelihood(int idx);
         double                          lnProbability(void);
@@ -74,6 +75,8 @@ class Model {
         Restaurant*                     ratesRestaurant;
         Restaurant*                     shapeRestaurant;
         std::map<Restaurant*,double>    proposalProbabilities;
+        std::vector<double>             chunkLnL;                 // cached log-likelihood of each data subset
+        bool                            chunkLnLValid = false;    // filled on first use by getChunkLnLs()
 };
 
 #endif
