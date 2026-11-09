@@ -369,9 +369,10 @@ void Partition::setRgf(void) {
 
 double Partition::ssDistance(std::map<Partition*,int>& partList) {
 
-    // find the partition with the largest degree
+    // find the partition with the largest degree (including this one, which can have a
+    // larger degree than any in the list)
     int numberPartitions = 0;
-    int largestDegree = 0;
+    int largestDegree = this->degree();
     for (std::map<Partition*,int>::iterator p=partList.begin(); p != partList.end(); p++)
         {
         if ( p->first->degree() > largestDegree )
