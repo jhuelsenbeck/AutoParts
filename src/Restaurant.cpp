@@ -441,7 +441,7 @@ double Restaurant::update(double power) {
             }
             
         // accept/reject
-        double lnR = (lnLikelihoodRatio * power) + (lnPriorRatio * power) + lnProposalRatio;
+        double lnR = (lnLikelihoodRatio * power) + lnPriorRatio + lnProposalRatio; // only the likelihood is heated
         bool accept = false;
         if (log(rng.uniformRv()) < lnR)
             accept = true;
@@ -486,13 +486,19 @@ double Restaurant::update(double power) {
                 Msg::error("Could not find table with patron " + std::to_string(n));
             tab->removePatron(n);
             
-            // if there are no longer any patrons at the table, remove the table from the restaurant
+            // if the patron was alone at its table, Algorithm 8 keeps that table (and its
+            // parameter value) as the first auxiliary table, so only m-1 fresh tables are
+            // drawn; if it is not chosen, it is removed below along with the other empty tables
+            int numFreshTables = numAuxliaryTables;
             if (tab->getNumPatrons() == 0)
-                removeTable(tab);
-            
-            // make numAuxiliary tables drawing the parameter values from the prior distribution
-            // the auxiliary tables are added to the tables set
-            for (int i=0; i<numAuxliaryTables; i++)
+                {
+                auxiliaryTables.insert(tab);
+                numFreshTables--;
+                }
+
+            // make the remaining auxiliary tables, drawing the parameter values from the prior
+            // distribution; the auxiliary tables are added to the tables set
+            for (int i=0; i<numFreshTables; i++)
                 auxiliaryTables.insert( addTable() );
                             
             // calculate the likelihood when the patron is seated at each of the tables (including the auxiliary tables)
@@ -507,9 +513,9 @@ double Restaurant::update(double power) {
                 std::set<Table*>::iterator it = auxiliaryTables.find(t);
                 double lnP = 0.0;
                 if (it == auxiliaryTables.end())
-                    lnP = log( (double)(t->getNumPatrons() - 1) ) * power; // subtract the patron that was added for calculation purposes
+                    lnP = log( (double)(t->getNumPatrons() - 1) ); // subtract the patron that was added for calculation purposes
                 else
-                    lnP = log(alpha/numAuxliaryTables) * power;
+                    lnP = log(alpha/numAuxliaryTables);
                 tableLikes.insert( std::make_pair(t, lnL+lnP) );
                 t->removePatron(n);
                 }

@@ -198,14 +198,12 @@ void Mcmc::run(int numChains, double temperature) {
     // run the chain
     auto start = std::chrono::high_resolution_clock::now();
     std::vector<double> lnL(numChains);
-    std::vector<double> lnP(numChains);
     for (int n=1; n<=numCycles; n++)
         {
         for (int k=0; k<numChains; k++)
             {
             // propose a new state for the chain
             lnL[k] = model[k]->update( power(chainIndex[k], temperature) );
-            lnP[k] = model[k]->lnProbability();
             }
         
         // attempt swap
@@ -215,11 +213,9 @@ void Mcmc::run(int numChains, double temperature) {
             idx1 = (int)(rng.uniformRv() * numChains);
         double pow0 = power(chainIndex[idx0], temperature);
         double pow1 = power(chainIndex[idx1], temperature);
-        double lnR = 0.0;
-        lnR += (lnL[idx0] + lnP[idx0]) * pow1;
-        lnR += (lnL[idx1] + lnP[idx1]) * pow0;
-        lnR -= (lnL[idx0] + lnP[idx0]) * pow0;
-        lnR -= (lnL[idx1] + lnP[idx1]) * pow1;
+        // only the likelihood is heated (target of a chain is L^power * prior), so the
+        // prior cancels in the swap ratio
+        double lnR = (lnL[idx0] - lnL[idx1]) * (pow1 - pow0);
         if (std::log(rng.uniformRv()) < lnR)
             {
             int tempIdx = chainIndex[idx0];
@@ -290,14 +286,12 @@ void Mcmc::burnin(int numChains, double temperature) {
     std::cout << "   Markov Chain Monte Carlo Burn-In:" << std::endl;
 
     std::vector<double> lnL(numChains);
-    std::vector<double> lnP(numChains);
     for (int n=1; n<=burnInCycles; n++)
         {
         // propose a new state for the chain
         for (int k=0; k<numChains; k++)
             {
             lnL[k] = model[k]->update( power(chainIndex[k], temperature) );
-            lnP[k] = model[k]->lnProbability();
             }
             
         // swap
@@ -307,11 +301,9 @@ void Mcmc::burnin(int numChains, double temperature) {
             idx1 = (int)(rng.uniformRv() * numChains);
         double pow0 = power(chainIndex[idx0], temperature);
         double pow1 = power(chainIndex[idx1], temperature);
-        double lnR = 0.0;
-        lnR += (lnL[idx0] + lnP[idx0]) * pow1;
-        lnR += (lnL[idx1] + lnP[idx1]) * pow0;
-        lnR -= (lnL[idx0] + lnP[idx0]) * pow0;
-        lnR -= (lnL[idx1] + lnP[idx1]) * pow1;
+        // only the likelihood is heated (target of a chain is L^power * prior), so the
+        // prior cancels in the swap ratio
+        double lnR = (lnL[idx0] - lnL[idx1]) * (pow1 - pow0);
         if (std::log(rng.uniformRv()) < lnR)
             {
             int tempIdx = chainIndex[idx0];
