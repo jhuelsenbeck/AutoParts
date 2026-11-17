@@ -11,6 +11,9 @@
 #   Analyses/run_all.sh --threads 4     use 4 threads per analysis (default: the number of
 #                                       physical cores divided by the number of jobs)
 #   Analyses/run_all.sh --runs FILE     use another list of runs
+#   Analyses/run_all.sh --reverse       start from the end of the list (run_all_rev.sh does
+#                                       this), so that two computers can work through the
+#                                       list from opposite ends and meet in the middle
 #
 # One analysis does not use many threads efficiently, so it is faster overall to run
 # several analyses at once, each with a few threads (on an M5 Max, three analyses with 4
@@ -60,16 +63,18 @@ if [ "${1:-}" = "--run-one" ]; then
 fi
 
 dryRun=0
+reverse=0
 jobs=""
 threads=""
 filter=""
 while [ $# -gt 0 ]; do
     case "$1" in
         --dry-run) dryRun=1 ;;
+        --reverse) reverse=1 ;;
         --jobs)    jobs="$2"; shift ;;
         --threads) threads="$2"; shift ;;
         --runs)    RUN_LIST="$2"; shift ;;
-        -h|--help) sed -n '2,23p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+        -h|--help) sed -n '2,26p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
         -*)        echo "Unknown option: $1" >&2; exit 1 ;;
         *)         filter="$1" ;;
     esac
@@ -91,7 +96,7 @@ mkdir -p "$OUTPUT_DIR"
 
 # the runs selected that are not done yet, one per line: <name> <seed> <arguments...>
 toRun="$OUTPUT_DIR/.to_run.$$"
-trap 'rm -f "$toRun"' EXIT
+trap 'rm -f "$toRun" "$toRun.rev"' EXIT
 : > "$toRun"
 numSelected=0; numDone=0
 while IFS= read -r line; do
@@ -104,15 +109,21 @@ while IFS= read -r line; do
         [ $dryRun -eq 1 ] && echo "done     $name  ($(cat "$OUTPUT_DIR/$name.done"))"
         continue
     fi
-    if [ $dryRun -eq 1 ]; then
-        echo "to run   $name"
-        echo "         autoparts $args -o Analyses/Output/$name -seed $seed -threads $threads"
-    fi
     echo "$line" >> "$toRun"
 done < "$RUN_LIST"
 numToRun=$((numSelected - numDone))
 
+# work from the end of the list instead (tail -r reverses the lines of a file on macOS)
+if [ $reverse -eq 1 ]; then
+    tail -r "$toRun" > "$toRun.rev" && mv "$toRun.rev" "$toRun"
+fi
+
 if [ $dryRun -eq 1 ]; then
+    while IFS= read -r line; do
+        read -r name seed args <<< "$line"
+        echo "to run   $name"
+        echo "         autoparts $args -o Analyses/Output/$name -seed $seed -threads $threads"
+    done < "$toRun"
     echo "$numSelected runs selected: $numDone done, $numToRun to run ($jobs at a time, $threads threads each)"
     exit 0
 fi
@@ -131,7 +142,9 @@ fi
 # keep the Mac awake until this script ends
 caffeinate -i -w $$ &
 
-echo "$numToRun runs to do ($numDone of the $numSelected selected are done), $jobs at a time, $threads threads each"
+order="in list order"
+[ $reverse -eq 1 ] && order="from the end of the list"
+echo "$numToRun runs to do ($numDone of the $numSelected selected are done), $jobs at a time, $threads threads each, $order"
 xargs -P "$jobs" -L 1 "$ANALYSES_DIR/$(basename "$0")" --run-one "$threads" < "$toRun"
 
 numFailed=0
