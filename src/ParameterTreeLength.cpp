@@ -6,8 +6,13 @@
 #include "UpdateInfo.hpp"
 #include "UserSettings.hpp"
 
+// The prior on a tree length is a gamma distribution truncated to (MIN_LENGTH, MAX_LENGTH).
+// The upper bound was 50, but in all three empirical data sets the posterior of some
+// subsets' tree lengths (e.g., third codon positions) reaches it; 1000 removes that
+// truncation while changing the prior negligibly (under the default Gamma(1,1) prior the
+// probability above 50 is about exp(-50)).
 #define MIN_LENGTH 1e-6
-#define MAX_LENGTH 50.0
+#define MAX_LENGTH 1000.0
 
 
 ParameterTreeLength::ParameterTreeLength(const ParameterTreeLength& parm) : Parameter(parm) {

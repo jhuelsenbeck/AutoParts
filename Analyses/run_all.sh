@@ -80,6 +80,16 @@ while [ $# -gt 0 ]; do
     esac
     shift
 done
+# the list of runs, as a full path (the script changes directory below); a relative path
+# is taken relative to the current directory, or failing that to Analyses/
+if [ ! -f "$RUN_LIST" ] && [ -f "$ANALYSES_DIR/$RUN_LIST" ]; then
+    RUN_LIST="$ANALYSES_DIR/$RUN_LIST"
+fi
+if [ ! -f "$RUN_LIST" ]; then
+    echo "Cannot find the list of runs: $RUN_LIST" >&2
+    exit 1
+fi
+RUN_LIST="$(cd "$(dirname "$RUN_LIST")" && pwd)/$(basename "$RUN_LIST")"
 numCores=$(sysctl -n hw.physicalcpu 2>/dev/null || echo 1)
 if [ -z "$jobs" ]; then
     jobs=$((numCores / 4))
