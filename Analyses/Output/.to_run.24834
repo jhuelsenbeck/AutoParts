@@ -1,0 +1,28 @@
+empirical/skinks_long/skinks_10.8_2 2028 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -ePi 10.8 -eTheta 10.8 -eShape 10.8 -eLength 10.8 -c yes
+empirical/skinks_long/skinks_10.8_1 2027 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -ePi 10.8 -eTheta 10.8 -eShape 10.8 -eLength 10.8 -c yes
+empirical/skinks_long/skinks_10.0_2 2026 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -ePi 10.0 -eTheta 10.0 -eShape 10.0 -eLength 10.0 -c yes
+empirical/skinks_long/skinks_10.0_1 2025 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -ePi 10.0 -eTheta 10.0 -eShape 10.0 -eLength 10.0 -c yes
+empirical/skinks_long/skinks_8.0_2 2024 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -ePi 8.0 -eTheta 8.0 -eShape 8.0 -eLength 8.0 -c yes
+empirical/skinks_long/skinks_8.0_1 2023 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -ePi 8.0 -eTheta 8.0 -eShape 8.0 -eLength 8.0 -c yes
+empirical/skinks_long/skinks_hyper_10.8_2 2022 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 10.8 -c no
+empirical/skinks_long/skinks_hyper_10.8_1 2021 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 10.8 -c no
+empirical/skinks_long/skinks_hyper_10.0_2 2020 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 10.0 -c no
+empirical/skinks_long/skinks_hyper_10.0_1 2019 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 10.0 -c no
+empirical/skinks_long/skinks_hyper_8.0_2 2018 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 8.0 -c no
+empirical/skinks_long/skinks_hyper_8.0_1 2017 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 8.0 -c no
+empirical/skinks_long/skinks_6.0_2 2016 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -ePi 6.0 -eTheta 6.0 -eShape 6.0 -eLength 6.0 -c yes
+empirical/skinks_long/skinks_6.0_1 2015 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -ePi 6.0 -eTheta 6.0 -eShape 6.0 -eLength 6.0 -c yes
+empirical/skinks_long/skinks_4.0_2 2014 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -ePi 4.0 -eTheta 4.0 -eShape 4.0 -eLength 4.0 -c yes
+empirical/skinks_long/skinks_4.0_1 2013 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -ePi 4.0 -eTheta 4.0 -eShape 4.0 -eLength 4.0 -c yes
+empirical/skinks_long/skinks_2.0_2 2012 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -ePi 2.0 -eTheta 2.0 -eShape 2.0 -eLength 2.0 -c yes
+empirical/skinks_long/skinks_2.0_1 2011 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -ePi 2.0 -eTheta 2.0 -eShape 2.0 -eLength 2.0 -c yes
+empirical/skinks_long/skinks_1.2_2 2010 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -ePi 1.2 -eTheta 1.2 -eShape 1.2 -eLength 1.2 -c yes
+empirical/skinks_long/skinks_1.2_1 2009 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -ePi 1.2 -eTheta 1.2 -eShape 1.2 -eLength 1.2 -c yes
+empirical/skinks_long/skinks_hyper_6.0_2 2008 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 6.0 -c no
+empirical/skinks_long/skinks_hyper_6.0_1 2007 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 6.0 -c no
+empirical/skinks_long/skinks_hyper_4.0_2 2006 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 4.0 -c no
+empirical/skinks_long/skinks_hyper_4.0_1 2005 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 4.0 -c no
+empirical/skinks_long/skinks_hyper_2.0_2 2004 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 2.0 -c no
+empirical/skinks_long/skinks_hyper_2.0_1 2003 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 2.0 -c no
+empirical/skinks_long/skinks_hyper_1.2_2 2002 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 1.2 -c no
+empirical/skinks_long/skinks_hyper_1.2_1 2001 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 1.2 -c no

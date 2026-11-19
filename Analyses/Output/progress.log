@@ -179,3 +179,27 @@
 2026-11-17 01:44:12  start  simulation/hyper_1.2_2
 2026-11-17 01:49:27  done   simulation/hyper_5.8_2  (24h28m50s)
 2026-11-17 01:49:27  start  simulation/hyper_1.2_1
+2026-11-17 11:56:44  start  empirical/skinks_long/skinks_10.8_2
+2026-11-17 11:56:44  start  empirical/skinks_long/skinks_10.0_2
+2026-11-17 11:56:44  start  empirical/skinks_long/skinks_10.8_1
+2026-11-17 11:56:44  start  empirical/skinks_long/skinks_10.0_1
+2026-11-18 03:50:57  done   empirical/skinks_long/skinks_10.0_2  (15h54m13s)
+2026-11-18 03:50:57  start  empirical/skinks_long/skinks_8.0_2
+2026-11-18 03:52:56  done   empirical/skinks_long/skinks_10.0_1  (15h56m12s)
+2026-11-18 03:52:56  start  empirical/skinks_long/skinks_8.0_1
+2026-11-18 04:18:27  done   empirical/skinks_long/skinks_10.8_2  (16h21m43s)
+2026-11-18 04:18:27  start  empirical/skinks_long/skinks_hyper_10.8_2
+2026-11-18 04:19:41  done   empirical/skinks_long/skinks_10.8_1  (16h22m57s)
+2026-11-18 04:19:41  start  empirical/skinks_long/skinks_hyper_10.8_1
+2026-11-18 18:35:27  done   empirical/skinks_long/skinks_8.0_1  (14h42m31s)
+2026-11-18 18:35:27  start  empirical/skinks_long/skinks_hyper_10.0_2
+2026-11-18 18:40:05  done   empirical/skinks_long/skinks_8.0_2  (14h49m08s)
+2026-11-18 18:40:05  start  empirical/skinks_long/skinks_hyper_10.0_1
+2026-11-18 20:25:08  done   empirical/skinks_long/skinks_hyper_10.8_2  (16h06m41s)
+2026-11-18 20:25:08  start  empirical/skinks_long/skinks_hyper_8.0_2
+2026-11-18 20:30:58  done   empirical/skinks_long/skinks_hyper_10.8_1  (16h11m17s)
+2026-11-18 20:30:58  start  empirical/skinks_long/skinks_hyper_8.0_1
+2026-11-19 09:34:00  done   empirical/skinks_long/skinks_hyper_10.0_2  (14h58m33s)
+2026-11-19 09:34:00  start  empirical/skinks_long/skinks_6.0_2
+2026-11-19 09:35:59  done   empirical/skinks_long/skinks_hyper_10.0_1  (14h55m54s)
+2026-11-19 09:35:59  start  empirical/skinks_long/skinks_6.0_1
