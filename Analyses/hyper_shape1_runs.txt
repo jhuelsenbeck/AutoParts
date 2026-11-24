@@ -9,7 +9,10 @@
 # Same settings as the long runs (cynmix_long_runs.txt, skinks_long_runs.txt) and the
 # simulation runs in paper_runs.txt; only the hyperprior differs. Output goes to
 # Analyses/Output/empirical/{cynmix,skinks}_hyper_shape1/ and Analyses/Output/simulation_hyper_shape1/.
-# Gall wasps first (about 6.5 h each), then skinks (about 14 h), then the simulations (about 24 h).
+# Gall wasps first (about 6.5 h each), then skinks (about 14 h), then the simulations (about 24 h),
+# then the hummingbirds (three Metropolis-coupled chains; much the slowest). With two computers,
+# run run_hyper_shape1.sh on one and run_hyper_shape1_rev.sh on the other: they work through
+# this list from opposite ends.
 empirical/cynmix_hyper_shape1/cynmix_hyper_1.2_1 5001 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 1.2 -c no -cShape 1
 empirical/cynmix_hyper_shape1/cynmix_hyper_1.2_2 5002 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 1.2 -c no -cShape 1
 empirical/cynmix_hyper_shape1/cynmix_hyper_2.0_1 5003 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 2.0 -c no -cShape 1
@@ -44,3 +47,15 @@ simulation_hyper_shape1/hyper_3.0_1 5031 -si Analyses/Output/simulation_hyper_sh
 simulation_hyper_shape1/hyper_3.0_2 5032 -si Analyses/Output/simulation_hyper_shape1/hyper_3.0_2.sim.phy -s 1000 -n 1000000 -p 1000 -b 40000 -g 4 -mT 3.0 -nSi 25 -c no -cShape 1 -tFreqs 500 -tRates 500
 simulation_hyper_shape1/hyper_5.8_1 5033 -si Analyses/Output/simulation_hyper_shape1/hyper_5.8_1.sim.phy -s 1000 -n 1000000 -p 1000 -b 40000 -g 4 -mT 5.8 -nSi 25 -c no -cShape 1
 simulation_hyper_shape1/hyper_5.8_2 5034 -si Analyses/Output/simulation_hyper_shape1/hyper_5.8_2.sim.phy -s 1000 -n 1000000 -p 1000 -b 40000 -g 4 -mT 5.8 -nSi 25 -c no -cShape 1
+empirical/hummer_hyper_shape1/hummer_hyper_1.2_1 5035 -i Analyses/Empirical/hummer_analyses/hummer.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -nc 3 -temp 0.2 -mT 1.2 -c no -cShape 1
+empirical/hummer_hyper_shape1/hummer_hyper_1.2_2 5036 -i Analyses/Empirical/hummer_analyses/hummer.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -nc 3 -temp 0.2 -mT 1.2 -c no -cShape 1
+empirical/hummer_hyper_shape1/hummer_hyper_2.0_1 5037 -i Analyses/Empirical/hummer_analyses/hummer.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -nc 3 -temp 0.2 -mT 2.0 -c no -cShape 1
+empirical/hummer_hyper_shape1/hummer_hyper_2.0_2 5038 -i Analyses/Empirical/hummer_analyses/hummer.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -nc 3 -temp 0.2 -mT 2.0 -c no -cShape 1
+empirical/hummer_hyper_shape1/hummer_hyper_4.0_1 5039 -i Analyses/Empirical/hummer_analyses/hummer.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -nc 3 -temp 0.2 -mT 4.0 -c no -cShape 1
+empirical/hummer_hyper_shape1/hummer_hyper_4.0_2 5040 -i Analyses/Empirical/hummer_analyses/hummer.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -nc 3 -temp 0.2 -mT 4.0 -c no -cShape 1
+empirical/hummer_hyper_shape1/hummer_hyper_6.0_1 5041 -i Analyses/Empirical/hummer_analyses/hummer.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -nc 3 -temp 0.2 -mT 6.0 -c no -cShape 1
+empirical/hummer_hyper_shape1/hummer_hyper_6.0_2 5042 -i Analyses/Empirical/hummer_analyses/hummer.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -nc 3 -temp 0.2 -mT 6.0 -c no -cShape 1
+empirical/hummer_hyper_shape1/hummer_hyper_8.0_1 5043 -i Analyses/Empirical/hummer_analyses/hummer.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -nc 3 -temp 0.2 -mT 8.0 -c no -cShape 1
+empirical/hummer_hyper_shape1/hummer_hyper_8.0_2 5044 -i Analyses/Empirical/hummer_analyses/hummer.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -nc 3 -temp 0.2 -mT 8.0 -c no -cShape 1
+empirical/hummer_hyper_shape1/hummer_hyper_8.8_1 5045 -i Analyses/Empirical/hummer_analyses/hummer.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -nc 3 -temp 0.2 -mT 8.8 -c no -cShape 1
+empirical/hummer_hyper_shape1/hummer_hyper_8.8_2 5046 -i Analyses/Empirical/hummer_analyses/hummer.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -nc 3 -temp 0.2 -mT 8.8 -c no -cShape 1

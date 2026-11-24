@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Rerun all of the hyperprior analyses with the new hyperprior on the concentration parameter
-# (Analyses/hyper_shape1_runs.txt: 14 gall wasp, 14 skink and 6 simulation runs), then make
+# (Analyses/hyper_shape1_runs.txt: 14 gall wasp, 14 skink, 6 simulation and 12 hummingbird runs), then make
 # the convergence tables (new runs against the earlier hyperprior runs).
 #
 #   Analyses/run_hyper_shape1.sh              4 runs at a time (the default for 16-19 cores)
@@ -10,11 +10,16 @@
 #
 # Runs that finished (a .done file) are skipped, so the script can be started again after an
 # interruption; an interrupted run starts again from the beginning.
+#
+# With two computers, run this script on one and run_hyper_shape1_rev.sh on the other; they
+# work through the list from opposite ends. Neither sees the other's output, so compare their
+# Analyses/Output/progress.log files now and again, stop one when the runs it has left are the
+# ones the other is running, and copy the finished output (with its .done files) across.
 
 ANALYSES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$ANALYSES_DIR" || exit 1
 
-"$ANALYSES_DIR/run_all.sh" --runs "$ANALYSES_DIR/hyper_shape1_runs.txt" "$@"
+"$ANALYSES_DIR/run_all.sh" ${HYPER_REVERSE:+--reverse} --runs "$ANALYSES_DIR/hyper_shape1_runs.txt" "$@"
 status=$?
 case " $* " in *" --dry-run "*) exit $status ;; esac
 
@@ -23,5 +28,7 @@ python3 "$ANALYSES_DIR/convergence_table.py" Output/empirical/cynmix_long Output
     "$ANALYSES_DIR/cynmix_hyper_shape1_convergence.tsv" > "$ANALYSES_DIR/cynmix_hyper_shape1_convergence.md"
 python3 "$ANALYSES_DIR/convergence_table.py" Output/empirical/skinks_long Output/empirical/skinks_hyper_shape1 \
     "$ANALYSES_DIR/skinks_hyper_shape1_convergence.tsv" --subset 7 > "$ANALYSES_DIR/skinks_hyper_shape1_convergence.md"
-echo "Convergence tables: $ANALYSES_DIR/{cynmix,skinks}_hyper_shape1_convergence.md"
+python3 "$ANALYSES_DIR/convergence_table.py" Output/empirical/hummer Output/empirical/hummer_hyper_shape1 \
+    "$ANALYSES_DIR/hummer_hyper_shape1_convergence.tsv" > "$ANALYSES_DIR/hummer_hyper_shape1_convergence.md"
+echo "Convergence tables: $ANALYSES_DIR/{cynmix,skinks,hummer}_hyper_shape1_convergence.md"
 exit $status
