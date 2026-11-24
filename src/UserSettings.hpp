@@ -23,6 +23,7 @@ class UserSettings {
         double          getPriorConcMean(void) { return priorConcMean; }
         double          getPriorMeanTables(void) { return priorMeanTables; }
         double          getPriorConcVariance(void) { return priorConcVariance; }
+        double          getPriorConcShape(void) { return priorConcShape; }
         std::string     getInputFile(void) { return inputFile; }
         std::string     getOutputFile(void) { return outputFile; }
         int             getNumGammaCategories(void) { return numGammaCategories; }
@@ -81,6 +82,7 @@ class UserSettings {
         double          priorConcMean;
         double          priorMeanTables;
         double          priorConcVariance;
+        double          priorConcShape;
         double          etLength;
         double          etAlpha;
         double          etPi;

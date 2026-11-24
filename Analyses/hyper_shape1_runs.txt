@@ -1,0 +1,46 @@
+# Reruns of every hyperprior (-c no) analysis with the new hyperprior on the concentration
+# parameter: a gamma with shape 1 (an exponential), whose mean is chosen so that the prior mean
+# number of tables, integrated over the hyperprior, equals -mT (option -cShape 1). The earlier
+# hyperprior runs used a gamma with variance 1, which is nearly a point mass at large E(k)
+# (mean 268 at E(k) = 10.8 for K = 11) and very diffuse at small E(k).
+#
+#   Analyses/run_hyper_shape1.sh
+#
+# Same settings as the long runs (cynmix_long_runs.txt, skinks_long_runs.txt) and the
+# simulation runs in paper_runs.txt; only the hyperprior differs. Output goes to
+# Analyses/Output/empirical/{cynmix,skinks}_hyper_shape1/ and Analyses/Output/simulation_hyper_shape1/.
+# Gall wasps first (about 6.5 h each), then skinks (about 14 h), then the simulations (about 24 h).
+empirical/cynmix_hyper_shape1/cynmix_hyper_1.2_1 5001 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 1.2 -c no -cShape 1
+empirical/cynmix_hyper_shape1/cynmix_hyper_1.2_2 5002 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 1.2 -c no -cShape 1
+empirical/cynmix_hyper_shape1/cynmix_hyper_2.0_1 5003 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 2.0 -c no -cShape 1
+empirical/cynmix_hyper_shape1/cynmix_hyper_2.0_2 5004 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 2.0 -c no -cShape 1
+empirical/cynmix_hyper_shape1/cynmix_hyper_4.0_1 5005 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 4.0 -c no -cShape 1
+empirical/cynmix_hyper_shape1/cynmix_hyper_4.0_2 5006 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 4.0 -c no -cShape 1
+empirical/cynmix_hyper_shape1/cynmix_hyper_6.0_1 5007 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 6.0 -c no -cShape 1
+empirical/cynmix_hyper_shape1/cynmix_hyper_6.0_2 5008 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 6.0 -c no -cShape 1
+empirical/cynmix_hyper_shape1/cynmix_hyper_8.0_1 5009 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 8.0 -c no -cShape 1
+empirical/cynmix_hyper_shape1/cynmix_hyper_8.0_2 5010 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 8.0 -c no -cShape 1
+empirical/cynmix_hyper_shape1/cynmix_hyper_10.0_1 5011 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 10.0 -c no -cShape 1
+empirical/cynmix_hyper_shape1/cynmix_hyper_10.0_2 5012 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 10.0 -c no -cShape 1
+empirical/cynmix_hyper_shape1/cynmix_hyper_10.8_1 5013 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 10.8 -c no -cShape 1
+empirical/cynmix_hyper_shape1/cynmix_hyper_10.8_2 5014 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 10.8 -c no -cShape 1
+empirical/skinks_hyper_shape1/skinks_hyper_1.2_1 5015 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 1.2 -c no -cShape 1
+empirical/skinks_hyper_shape1/skinks_hyper_1.2_2 5016 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 1.2 -c no -cShape 1
+empirical/skinks_hyper_shape1/skinks_hyper_2.0_1 5017 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 2.0 -c no -cShape 1
+empirical/skinks_hyper_shape1/skinks_hyper_2.0_2 5018 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 2.0 -c no -cShape 1
+empirical/skinks_hyper_shape1/skinks_hyper_4.0_1 5019 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 4.0 -c no -cShape 1
+empirical/skinks_hyper_shape1/skinks_hyper_4.0_2 5020 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 4.0 -c no -cShape 1
+empirical/skinks_hyper_shape1/skinks_hyper_6.0_1 5021 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 6.0 -c no -cShape 1
+empirical/skinks_hyper_shape1/skinks_hyper_6.0_2 5022 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 6.0 -c no -cShape 1
+empirical/skinks_hyper_shape1/skinks_hyper_8.0_1 5023 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 8.0 -c no -cShape 1
+empirical/skinks_hyper_shape1/skinks_hyper_8.0_2 5024 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 8.0 -c no -cShape 1
+empirical/skinks_hyper_shape1/skinks_hyper_10.0_1 5025 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 10.0 -c no -cShape 1
+empirical/skinks_hyper_shape1/skinks_hyper_10.0_2 5026 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 10.0 -c no -cShape 1
+empirical/skinks_hyper_shape1/skinks_hyper_10.8_1 5027 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 10.8 -c no -cShape 1
+empirical/skinks_hyper_shape1/skinks_hyper_10.8_2 5028 -i Analyses/Empirical/skinks_analyses/skinks.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 10.8 -c no -cShape 1
+simulation_hyper_shape1/hyper_1.2_1 5029 -si Analyses/Output/simulation_hyper_shape1/hyper_1.2_1.sim.phy -s 1000 -n 1000000 -p 1000 -b 40000 -g 4 -mT 1.2 -nSi 25 -c no -cShape 1 -tFreqs 800 -tRates 800
+simulation_hyper_shape1/hyper_1.2_2 5030 -si Analyses/Output/simulation_hyper_shape1/hyper_1.2_2.sim.phy -s 1000 -n 1000000 -p 1000 -b 40000 -g 4 -mT 1.2 -nSi 25 -c no -cShape 1 -tFreqs 800 -tRates 800
+simulation_hyper_shape1/hyper_3.0_1 5031 -si Analyses/Output/simulation_hyper_shape1/hyper_3.0_1.sim.phy -s 1000 -n 1000000 -p 1000 -b 40000 -g 4 -mT 3.0 -nSi 25 -c no -cShape 1 -tFreqs 500 -tRates 500
+simulation_hyper_shape1/hyper_3.0_2 5032 -si Analyses/Output/simulation_hyper_shape1/hyper_3.0_2.sim.phy -s 1000 -n 1000000 -p 1000 -b 40000 -g 4 -mT 3.0 -nSi 25 -c no -cShape 1 -tFreqs 500 -tRates 500
+simulation_hyper_shape1/hyper_5.8_1 5033 -si Analyses/Output/simulation_hyper_shape1/hyper_5.8_1.sim.phy -s 1000 -n 1000000 -p 1000 -b 40000 -g 4 -mT 5.8 -nSi 25 -c no -cShape 1
+simulation_hyper_shape1/hyper_5.8_2 5034 -si Analyses/Output/simulation_hyper_shape1/hyper_5.8_2.sim.phy -s 1000 -n 1000000 -p 1000 -b 40000 -g 4 -mT 5.8 -nSi 25 -c no -cShape 1

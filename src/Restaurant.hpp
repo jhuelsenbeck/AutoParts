@@ -22,6 +22,8 @@ class Restaurant {
         Table*              addTable(void);
         static double       calculateAlphaFromExpectedNumberOfTables(double expT, int np);
         static double       expectedNumberOfTables(double a, int np);
+        static double       expectedNumberOfTablesUnderGamma(double shape, double rate, int np);
+        static double       gammaRateForExpectedNumberOfTables(double shape, double expT, int np);
         Table*              findTableWithPatron(int idx);
         double              getConcentrationParameter(void) { return alpha; }
         int                 getNumPatrons(void) { return numPatrons; }

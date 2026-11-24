@@ -85,9 +85,25 @@ Restaurant::Restaurant(Model* mp, UserSettings* s, bool sf, double a, int np, Pa
                 double eT = settingsPtr->getPriorMeanTables();
                 m = calculateAlphaFromExpectedNumberOfTables(eT, np);
             }
-            double v = settingsPtr->getPriorConcVariance();
-            gammaBeta  = m / v;
-            gammaAlpha = gammaBeta * m;
+            double shape = settingsPtr->getPriorConcShape();
+            if (shape > 0.0)
+                {
+                // gamma hyperprior with a fixed shape; its rate is chosen so that the prior mean
+                // number of tables, integrated over the hyperprior, equals the requested value
+                gammaAlpha = shape;
+                if (settingsPtr->getPriorMeanTables() != 0)
+                    gammaBeta = gammaRateForExpectedNumberOfTables(shape, settingsPtr->getPriorMeanTables(), np);
+                else
+                    gammaBeta = shape / m;
+                }
+            else
+                {
+                double v = settingsPtr->getPriorConcVariance();
+                gammaBeta  = m / v;
+                gammaAlpha = gammaBeta * m;
+                }
+            std::cout << "   *    Hyperprior Gamma(shape = " << gammaAlpha << ", rate = " << gammaBeta << "), mean = " << gammaAlpha / gammaBeta
+                      << ", prior mean number of tables = " << expectedNumberOfTablesUnderGamma(gammaAlpha, gammaBeta, np) << std::endl;
 
             // If the prior is for a small number of clusters, there is a chance you will initialize it to 0.0 (or something else unstable), throwing an error
             int initialization_attempt = 0;
@@ -247,6 +263,61 @@ double Restaurant::expectedNumberOfTables(double a, int np) {
         expectedNum += ( 1.0 / (i - 1.0 + a) );
     expectedNum *= a;
     return expectedNum;
+}
+
+// The prior mean number of tables when the concentration parameter has a Gamma(shape, rate)
+// hyperprior: E(k) = 1 + sum_{i=1}^{np-1} E[ a/(a+i) ], with each expectation computed by the
+// trapezoidal rule on a log scale (t = ln a), which handles shapes below one as well.
+double Restaurant::expectedNumberOfTablesUnderGamma(double shape, double rate, int np) {
+
+    double mean = shape / rate;
+    double sd = sqrt(shape) / rate;
+    double lo = log(mean) - 60.0;
+    double hi = log(mean + 40.0 * sd) + 1.0;
+    const int n = 20000;
+    double h = (hi - lo) / n;
+    double lnNorm = shape * log(rate) - Probability::Helper::lnGamma(shape);
+    double expectedNum = 1.0;
+    std::vector<double> w(n+1);
+    for (int j=0; j<=n; j++)
+        {
+        double t = lo + j * h;
+        double a = exp(t);
+        // density of t = ln a: f(a) * a = exp(lnNorm + shape*t - rate*a)
+        w[j] = exp(lnNorm + shape * t - rate * a) * ((j == 0 || j == n) ? 0.5 : 1.0) * h;
+        }
+    for (int i=1; i<np; i++)
+        {
+        double s = 0.0;
+        for (int j=0; j<=n; j++)
+            {
+            double a = exp(lo + j * h);
+            s += w[j] * a / (a + i);
+            }
+        expectedNum += s;
+        }
+    return expectedNum;
+}
+
+// The rate of a Gamma(shape, rate) hyperprior on the concentration parameter that gives the
+// requested prior mean number of tables (found by bisection on the log of the rate).
+double Restaurant::gammaRateForExpectedNumberOfTables(double shape, double expT, int np) {
+
+    if (expT >= np || expT <= 1.0)
+        Msg::error("The expected number of tables must be between 1 and " + std::to_string(np) + " (exclusive) with a gamma hyperprior");
+    // E(k) decreases as the rate increases
+    double lo = -40.0, hi = 40.0;
+    if (expectedNumberOfTablesUnderGamma(shape, exp(lo), np) < expT || expectedNumberOfTablesUnderGamma(shape, exp(hi), np) > expT)
+        Msg::error("Cannot find a gamma hyperprior with shape " + std::to_string(shape) + " that gives " + std::to_string(expT) + " expected tables");
+    for (int it=0; it<200 && hi - lo > 1e-10; it++)
+        {
+        double mid = 0.5 * (lo + hi);
+        if (expectedNumberOfTablesUnderGamma(shape, exp(mid), np) > expT)
+            lo = mid;
+        else
+            hi = mid;
+        }
+    return exp(0.5 * (lo + hi));
 }
 
 Table* Restaurant::findTableWithPatron(int idx) {

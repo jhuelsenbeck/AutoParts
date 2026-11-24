@@ -61,6 +61,7 @@ UserSettings::UserSettings(int argc,  char* argv[]) {
 	priorConcMean                   = 3.0;
     priorMeanTables                 = 1.2;
 	priorConcVariance               = 1.0;
+    priorConcShape                  = 0.0;     // 0: the hyperprior is given by its mean and variance (-m or -mT, and -k)
     etAlpha                         = 1.2;
     etPi                            = 1.2;
     etTheta                         = 1.2;
@@ -131,6 +132,8 @@ UserSettings::UserSettings(int argc,  char* argv[]) {
                 priorMeanTables = stof(settings[i]);
             else if (currentArg == "-k")
                 priorConcVariance = stof(settings[i]);
+            else if (currentArg == "-cShape")
+                priorConcShape = stof(settings[i]);
             else if (currentArg == "-ePi")
                 etPi = stof(settings[i]);
             else if (currentArg == "-eTheta")
@@ -195,6 +198,7 @@ void UserSettings::print(void) {
     std::cout << "   * Concentration parameter mean (when r.v.)              = " << priorConcMean << std::endl;
     std::cout << "   * Expected number of tables (when conc. is r.v.)        = " << priorMeanTables << std::endl;
     std::cout << "   * Concentration parameter variance (when r.v.)          = " << priorConcVariance << std::endl;
+    std::cout << "   * Concentration parameter hyperprior shape (when r.v.)  = " << priorConcShape << ((priorConcShape > 0.0) ? " (rate set so that the prior mean number of tables is -mT)" : " (not used; mean and variance used instead)") << std::endl;
     std::cout << "   * Expected number of tables for tree length             = " << etLength << std::endl;
     std::cout << "   * Expected number of tables for gamma shape             = " << etAlpha << std::endl;
     std::cout << "   * Expected number of tables for base frequencies        = " << etPi << std::endl;
@@ -244,10 +248,11 @@ void UserSettings::usage(void) {
     std::cout << "   Program options for DPP:" << std::endl;
     std::cout << "   * -c               : Concentration parameter is fixed (yes) or a random variable (no)" << std::endl;
     std::cout << "   * -aux             : Number of auxiliary tables when reseating (m in Neal's Algorithm 8; default 10)" << std::endl;
-    std::cout << "   * -k               : Prior mean of the number of categories when the concentration parameter is fixed" << std::endl;
+    std::cout << "   * -k               : Prior variance of the concentration parameter when it is a random variable (used when -cShape is 0)" << std::endl;
+    std::cout << "   * -cShape          : Shape of the gamma hyperprior on the concentration parameter. When > 0, the rate is chosen so that\n"
+              << "                        the prior mean number of tables, integrated over the hyperprior, equals -mT (default 0: use -k)" << std::endl;
     std::cout << "   * -m               : Prior mean of the concentration parameter when it is a random variable" << std::endl;
     std::cout << "   * -mT              : Expected number of tables when the concentration parameter is a random variable" << std::endl;
-    std::cout << "   * -v               : Prior variance of the concentration parameter when it is a random variable" << std::endl;
     std::cout << "   * -eLength         : Expected number of tables for tree length when the concentration parameter is fixed" << std::endl;
     std::cout << "   * -eShape          : Expected number of tables for gamma shape when the concentration parameter is fixed" << std::endl;
     std::cout << "   * -ePi             : Expected number of tables for base frequencies when the concentration parameter is fixed" << std::endl;
