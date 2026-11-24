@@ -1,0 +1,38 @@
+# Longer gall wasp (cynmix) analyses:
+#   Analyses/run_cynmix_long.sh
+# (which runs Analyses/run_all.sh --reverse --runs Analyses/cynmix_long_runs.txt, then
+# makes the convergence table).
+#
+# The same 28 settings as the cynmix runs in paper_runs.txt, run as the long skink
+# analyses were (skinks_long_runs.txt): a 1,000,000-cycle burn-in (during which the
+# proposals are tuned), then 10,000,000 cycles sampled every 500 (20,001 samples), with
+# the tree-length prior bounded at 1000 rather than 50 (see src/ParameterTreeLength.cpp).
+# The output goes to Analyses/Output/empirical/cynmix_long/.
+empirical/cynmix_long/cynmix_hyper_1.2_1 3001 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 1.2 -c no
+empirical/cynmix_long/cynmix_hyper_1.2_2 3002 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 1.2 -c no
+empirical/cynmix_long/cynmix_hyper_2.0_1 3003 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 2.0 -c no
+empirical/cynmix_long/cynmix_hyper_2.0_2 3004 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 2.0 -c no
+empirical/cynmix_long/cynmix_hyper_4.0_1 3005 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 4.0 -c no
+empirical/cynmix_long/cynmix_hyper_4.0_2 3006 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 4.0 -c no
+empirical/cynmix_long/cynmix_hyper_6.0_1 3007 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 6.0 -c no
+empirical/cynmix_long/cynmix_hyper_6.0_2 3008 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 6.0 -c no
+empirical/cynmix_long/cynmix_1.2_1 3009 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -ePi 1.2 -eTheta 1.2 -eShape 1.2 -eLength 1.2 -c yes
+empirical/cynmix_long/cynmix_1.2_2 3010 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -ePi 1.2 -eTheta 1.2 -eShape 1.2 -eLength 1.2 -c yes
+empirical/cynmix_long/cynmix_2.0_1 3011 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -ePi 2.0 -eTheta 2.0 -eShape 2.0 -eLength 2.0 -c yes
+empirical/cynmix_long/cynmix_2.0_2 3012 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -ePi 2.0 -eTheta 2.0 -eShape 2.0 -eLength 2.0 -c yes
+empirical/cynmix_long/cynmix_4.0_1 3013 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -ePi 4.0 -eTheta 4.0 -eShape 4.0 -eLength 4.0 -c yes
+empirical/cynmix_long/cynmix_4.0_2 3014 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -ePi 4.0 -eTheta 4.0 -eShape 4.0 -eLength 4.0 -c yes
+empirical/cynmix_long/cynmix_6.0_1 3015 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -ePi 6.0 -eTheta 6.0 -eShape 6.0 -eLength 6.0 -c yes
+empirical/cynmix_long/cynmix_6.0_2 3016 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -ePi 6.0 -eTheta 6.0 -eShape 6.0 -eLength 6.0 -c yes
+empirical/cynmix_long/cynmix_hyper_8.0_1 3017 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 8.0 -c no
+empirical/cynmix_long/cynmix_hyper_8.0_2 3018 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 8.0 -c no
+empirical/cynmix_long/cynmix_hyper_10.0_1 3019 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 10.0 -c no
+empirical/cynmix_long/cynmix_hyper_10.0_2 3020 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 10.0 -c no
+empirical/cynmix_long/cynmix_hyper_10.8_1 3021 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 10.8 -c no
+empirical/cynmix_long/cynmix_hyper_10.8_2 3022 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -mT 10.8 -c no
+empirical/cynmix_long/cynmix_8.0_1 3023 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -ePi 8.0 -eTheta 8.0 -eShape 8.0 -eLength 8.0 -c yes
+empirical/cynmix_long/cynmix_8.0_2 3024 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -ePi 8.0 -eTheta 8.0 -eShape 8.0 -eLength 8.0 -c yes
+empirical/cynmix_long/cynmix_10.0_1 3025 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -ePi 10.0 -eTheta 10.0 -eShape 10.0 -eLength 10.0 -c yes
+empirical/cynmix_long/cynmix_10.0_2 3026 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -ePi 10.0 -eTheta 10.0 -eShape 10.0 -eLength 10.0 -c yes
+empirical/cynmix_long/cynmix_10.8_1 3027 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -ePi 10.8 -eTheta 10.8 -eShape 10.8 -eLength 10.8 -c yes
+empirical/cynmix_long/cynmix_10.8_2 3028 -i Analyses/Empirical/cynmix_analyses/cynmix.in -s 500 -n 10000000 -p 10000 -b 1000000 -g 4 -ePi 10.8 -eTheta 10.8 -eShape 10.8 -eLength 10.8 -c yes

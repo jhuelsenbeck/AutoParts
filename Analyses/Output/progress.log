@@ -203,3 +203,105 @@
 2026-11-19 09:34:00  start  empirical/skinks_long/skinks_6.0_2
 2026-11-19 09:35:59  done   empirical/skinks_long/skinks_hyper_10.0_1  (14h55m54s)
 2026-11-19 09:35:59  start  empirical/skinks_long/skinks_6.0_1
+2026-11-19 11:01:52  done   empirical/skinks_long/skinks_hyper_8.0_2  (14h36m44s)
+2026-11-19 11:01:52  start  empirical/skinks_long/skinks_4.0_2
+2026-11-19 11:02:45  done   empirical/skinks_long/skinks_hyper_8.0_1  (14h31m47s)
+2026-11-19 11:02:45  start  empirical/skinks_long/skinks_4.0_1
+2026-11-19 15:23:46  start  empirical/skinks_long/skinks_4.0_1
+2026-11-19 15:23:46  start  empirical/skinks_long/skinks_6.0_1
+2026-11-19 15:23:46  start  empirical/skinks_long/skinks_6.0_2
+2026-11-19 15:23:46  start  empirical/skinks_long/skinks_4.0_2
+2026-11-19 16:05:54  start  empirical/skinks_long/skinks_6.0_1
+2026-11-19 16:05:54  start  empirical/skinks_long/skinks_6.0_2
+2026-11-19 16:05:54  start  empirical/skinks_long/skinks_4.0_2
+2026-11-19 16:05:54  start  empirical/skinks_long/skinks_4.0_1
+2026-11-19 16:20:48  start  empirical/skinks_long/skinks_4.0_1
+2026-11-19 16:20:48  start  empirical/skinks_long/skinks_4.0_2
+2026-11-19 16:20:48  start  empirical/skinks_long/skinks_6.0_2
+2026-11-19 16:20:48  start  empirical/skinks_long/skinks_6.0_1
+2026-11-20 06:51:17  done   empirical/skinks_long/skinks_4.0_1  (14h30m29s)
+2026-11-20 06:51:17  start  empirical/skinks_long/skinks_2.0_2
+2026-11-20 06:57:11  done   empirical/skinks_long/skinks_4.0_2  (14h36m23s)
+2026-11-20 06:57:11  start  empirical/skinks_long/skinks_2.0_1
+2026-11-20 07:06:17  done   empirical/skinks_long/skinks_6.0_1  (14h45m29s)
+2026-11-20 07:06:17  start  empirical/skinks_long/skinks_1.2_2
+2026-11-20 07:08:08  done   empirical/skinks_long/skinks_6.0_2  (14h47m20s)
+2026-11-20 07:08:08  start  empirical/skinks_long/skinks_1.2_1
+2026-11-20 23:07:24  done   empirical/skinks_long/skinks_2.0_2  (16h16m07s)
+2026-11-20 23:07:24  start  empirical/skinks_long/skinks_hyper_6.0_2
+2026-11-20 23:11:33  done   empirical/skinks_long/skinks_1.2_2  (16h05m16s)
+2026-11-20 23:11:33  start  empirical/skinks_long/skinks_hyper_6.0_1
+2026-11-20 23:12:02  done   empirical/skinks_long/skinks_2.0_1  (16h14m51s)
+2026-11-20 23:12:02  start  empirical/skinks_long/skinks_hyper_4.0_2
+2026-11-20 23:16:10  done   empirical/skinks_long/skinks_1.2_1  (16h08m02s)
+2026-11-20 23:16:10  start  empirical/skinks_long/skinks_hyper_4.0_1
+2026-11-21 12:26:26  done   empirical/skinks_long/skinks_hyper_4.0_2  (13h14m24s)
+2026-11-21 12:26:26  start  empirical/skinks_long/skinks_hyper_2.0_2
+2026-11-21 12:30:13  done   empirical/skinks_long/skinks_hyper_4.0_1  (13h14m03s)
+2026-11-21 12:30:13  start  empirical/skinks_long/skinks_hyper_2.0_1
+2026-11-21 12:32:56  done   empirical/skinks_long/skinks_hyper_6.0_2  (13h25m32s)
+2026-11-21 12:32:56  start  empirical/skinks_long/skinks_hyper_1.2_2
+2026-11-21 13:11:29  done   empirical/skinks_long/skinks_hyper_6.0_1  (13h59m56s)
+2026-11-21 13:11:29  start  empirical/skinks_long/skinks_hyper_1.2_1
+2026-11-22 01:39:48  done   empirical/skinks_long/skinks_hyper_2.0_2  (13h13m22s)
+2026-11-22 01:40:33  done   empirical/skinks_long/skinks_hyper_2.0_1  (13h10m20s)
+2026-11-22 01:50:28  done   empirical/skinks_long/skinks_hyper_1.2_2  (13h17m32s)
+2026-11-22 02:14:09  done   empirical/skinks_long/skinks_hyper_1.2_1  (13h02m40s)
+2026-11-22 06:22:57  start  empirical/cynmix_long/cynmix_10.0_1
+2026-11-22 06:22:57  start  empirical/cynmix_long/cynmix_10.8_1
+2026-11-22 06:22:57  start  empirical/cynmix_long/cynmix_10.8_2
+2026-11-22 06:22:57  start  empirical/cynmix_long/cynmix_10.0_2
+2026-11-22 13:39:22  done   empirical/cynmix_long/cynmix_10.0_1  (7h16m25s)
+2026-11-22 13:39:22  start  empirical/cynmix_long/cynmix_8.0_2
+2026-11-22 13:41:45  done   empirical/cynmix_long/cynmix_10.0_2  (7h18m48s)
+2026-11-22 13:41:45  start  empirical/cynmix_long/cynmix_8.0_1
+2026-11-22 13:50:38  done   empirical/cynmix_long/cynmix_10.8_1  (7h27m41s)
+2026-11-22 13:50:38  start  empirical/cynmix_long/cynmix_hyper_10.8_2
+2026-11-22 13:51:08  done   empirical/cynmix_long/cynmix_10.8_2  (7h28m11s)
+2026-11-22 13:51:09  start  empirical/cynmix_long/cynmix_hyper_10.8_1
+2026-11-22 19:39:25  done   empirical/cynmix_long/cynmix_8.0_2  (6h00m03s)
+2026-11-22 19:39:25  start  empirical/cynmix_long/cynmix_hyper_10.0_2
+2026-11-22 19:41:23  done   empirical/cynmix_long/cynmix_8.0_1  (5h59m38s)
+2026-11-22 19:41:23  start  empirical/cynmix_long/cynmix_hyper_10.0_1
+2026-11-22 20:16:59  done   empirical/cynmix_long/cynmix_hyper_10.8_2  (6h26m21s)
+2026-11-22 20:16:59  start  empirical/cynmix_long/cynmix_hyper_8.0_2
+2026-11-22 20:18:38  done   empirical/cynmix_long/cynmix_hyper_10.8_1  (6h27m29s)
+2026-11-22 20:18:38  start  empirical/cynmix_long/cynmix_hyper_8.0_1
+2026-11-22 20:58:41  FAILED empirical/cynmix_long/cynmix_hyper_10.0_1  (exit status 139; see /Users/johnh/GitHub/AnnaAutoparts/Analyses/Output/empirical/cynmix_long/cynmix_hyper_10.0_1.log)
+2026-11-22 20:58:41  start  empirical/cynmix_long/cynmix_6.0_2
+2026-11-23 01:44:13  done   empirical/cynmix_long/cynmix_hyper_10.0_2  (6h04m48s)
+2026-11-23 01:44:13  start  empirical/cynmix_long/cynmix_6.0_1
+2026-11-23 02:05:15  done   empirical/cynmix_long/cynmix_hyper_8.0_2  (5h48m16s)
+2026-11-23 02:05:15  start  empirical/cynmix_long/cynmix_4.0_2
+2026-11-23 02:06:56  done   empirical/cynmix_long/cynmix_hyper_8.0_1  (5h48m18s)
+2026-11-23 02:06:56  start  empirical/cynmix_long/cynmix_4.0_1
+2026-11-23 02:31:42  done   empirical/cynmix_long/cynmix_6.0_2  (5h33m01s)
+2026-11-23 02:31:42  start  empirical/cynmix_long/cynmix_2.0_2
+2026-11-23 07:07:22  done   empirical/cynmix_long/cynmix_6.0_1  (5h23m09s)
+2026-11-23 07:07:22  start  empirical/cynmix_long/cynmix_2.0_1
+2026-11-23 07:17:56  done   empirical/cynmix_long/cynmix_4.0_2  (5h12m41s)
+2026-11-23 07:17:56  start  empirical/cynmix_long/cynmix_1.2_2
+2026-11-23 07:19:20  done   empirical/cynmix_long/cynmix_4.0_1  (5h12m24s)
+2026-11-23 07:19:20  start  empirical/cynmix_long/cynmix_1.2_1
+2026-11-23 07:35:49  done   empirical/cynmix_long/cynmix_2.0_2  (5h04m07s)
+2026-11-23 07:35:49  start  empirical/cynmix_long/cynmix_hyper_6.0_2
+2026-11-23 13:25:09  done   empirical/cynmix_long/cynmix_2.0_1  (6h17m47s)
+2026-11-23 13:25:09  start  empirical/cynmix_long/cynmix_hyper_6.0_1
+2026-11-23 13:31:23  done   empirical/cynmix_long/cynmix_1.2_2  (6h13m27s)
+2026-11-23 13:31:23  start  empirical/cynmix_long/cynmix_hyper_4.0_2
+2026-11-23 13:33:25  done   empirical/cynmix_long/cynmix_1.2_1  (6h14m05s)
+2026-11-23 13:33:25  start  empirical/cynmix_long/cynmix_hyper_4.0_1
+2026-11-23 14:21:44  done   empirical/cynmix_long/cynmix_hyper_6.0_2  (6h45m55s)
+2026-11-23 14:21:44  start  empirical/cynmix_long/cynmix_hyper_2.0_2
+2026-11-23 21:18:20  done   empirical/cynmix_long/cynmix_hyper_4.0_2  (7h46m57s)
+2026-11-23 21:18:20  start  empirical/cynmix_long/cynmix_hyper_2.0_1
+2026-11-23 21:20:45  done   empirical/cynmix_long/cynmix_hyper_6.0_1  (7h55m36s)
+2026-11-23 21:20:45  start  empirical/cynmix_long/cynmix_hyper_1.2_2
+2026-11-23 21:20:55  done   empirical/cynmix_long/cynmix_hyper_4.0_1  (7h47m30s)
+2026-11-23 21:20:55  start  empirical/cynmix_long/cynmix_hyper_1.2_1
+2026-11-23 22:08:11  done   empirical/cynmix_long/cynmix_hyper_2.0_2  (7h46m27s)
+2026-11-23 23:10:48  start  empirical/cynmix_long/cynmix_hyper_10.0_1
+2026-11-24 02:47:33  done   empirical/cynmix_long/cynmix_hyper_2.0_1  (5h29m13s)
+2026-11-24 02:57:08  done   empirical/cynmix_long/cynmix_hyper_1.2_2  (5h36m23s)
+2026-11-24 02:59:35  done   empirical/cynmix_long/cynmix_hyper_1.2_1  (5h38m40s)
+2026-11-24 04:14:57  done   empirical/cynmix_long/cynmix_hyper_10.0_1  (5h04m09s)

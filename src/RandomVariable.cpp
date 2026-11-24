@@ -70,5 +70,8 @@ void RandomVariable::twist(void) {
 
 double RandomVariable::uniformRv(void) {
 
-    return (double)extractU32() / UINT32_MAX;
+    // strictly inside (0,1): dividing by UINT32_MAX gave exactly 1.0 (and 0.0) about once
+    // in 2^32 draws, so that (int)(u * n) indexed past the end of an array and -log(u)
+    // was infinite
+    return ((double)extractU32() + 0.5) / 4294967296.0;
 }
